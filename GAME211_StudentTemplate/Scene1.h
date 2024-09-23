@@ -3,6 +3,7 @@
 
 #include <MMath.h>
 #include "Scene.h"
+#include "Button.h"
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -13,6 +14,8 @@ private:
 	SDL_Renderer* renderer;	// the renderer associated with SDL window
 	Matrix4 projectionMatrix;	// set in OnCreate()
     Matrix4     inverseProjection;	// set in OnCreate()
+	Mouse mouse;
+	Button button;
 
 public:
 	// This constructor may be different from what you've seen before

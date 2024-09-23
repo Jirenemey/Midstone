@@ -29,34 +29,41 @@ bool Scene1::OnCreate() {
 	SDL_Surface* image;
 	SDL_Texture* texture;
 
-	image = IMG_Load("pacman.png");
+	image = IMG_Load("mouse.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
-	game->getPlayer()->setImage(image);
-	game->getPlayer()->setTexture(texture);
+	//game->getPlayer()->setImage(image);
+	//game->getPlayer()->setTexture(texture);
+	mouse.SetTexture(texture);
 
 	return true;
 }
 
-void Scene1::OnDestroy() {}
+void Scene1::OnDestroy() {
+	button.~Button();
+	mouse.~Mouse();
+}
 
 void Scene1::Update(const float deltaTime) {
 
 	// Update player
 	game->getPlayer()->Update(deltaTime);
+	mouse.Update();
+	button.Update(mouse);
 }
 
 void Scene1::Render() {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
 	SDL_RenderClear(renderer);
 
 	// render the player
-	game->RenderPlayer(0.10f);
-
+	//game->RenderPlayer(1.0f);
+	button.Draw(renderer);
+	mouse.Draw(renderer);
 	SDL_RenderPresent(renderer);
 }
 
 void Scene1::HandleEvents(const SDL_Event& event)
 {
 	// send events to player as needed
-	game->getPlayer()->HandleEvents(event);
+	//game->getPlayer()->HandleEvents(event);
 }
