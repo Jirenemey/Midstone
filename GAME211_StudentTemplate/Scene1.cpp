@@ -34,6 +34,10 @@ bool Scene1::OnCreate() {
 	//game->getPlayer()->setImage(image);
 	//game->getPlayer()->setTexture(texture);
 	mouse.SetTexture(texture);
+	button.sourceRect.y = 0;
+	button.destinationRect.x = 1000 / 2;
+	button.destinationRect.y = 200;
+	button.SetTexture(renderer, "buttons2.png");
 
 	return true;
 }
@@ -66,4 +70,13 @@ void Scene1::HandleEvents(const SDL_Event& event)
 {
 	// send events to player as needed
 	//game->getPlayer()->HandleEvents(event);
+	switch (event.type) {
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				if (button.isSelected) {
+					std::cout << "Start button clicked" << std::endl;
+				}
+			}
+	}
+
 }
