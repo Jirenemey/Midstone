@@ -4,6 +4,7 @@
 #include <MMath.h>
 #include "Scene.h"
 #include "Button.h"
+#include "Text.h"
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -16,6 +17,8 @@ private:
     Matrix4     inverseProjection;	// set in OnCreate()
 	Mouse mouse;
 	Button button;
+	Text text = Text("Atop.ttf", 100, "Hello world");
+	
 
 public:
 	// This constructor may be different from what you've seen before

@@ -45,6 +45,7 @@ bool Scene1::OnCreate() {
 void Scene1::OnDestroy() {
 	button.~Button();
 	mouse.~Mouse();
+	text.~Text();
 }
 
 void Scene1::Update(const float deltaTime) {
@@ -63,6 +64,7 @@ void Scene1::Render() {
 	//game->RenderPlayer(1.0f);
 	button.Draw(renderer);
 	mouse.Draw(renderer);
+	text.Draw(renderer);
 	SDL_RenderPresent(renderer);
 }
 

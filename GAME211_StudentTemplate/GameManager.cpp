@@ -10,6 +10,13 @@ GameManager::GameManager() {
 }
 
 bool GameManager::OnCreate() {
+    //TTF initialization
+    if (TTF_Init() < 0) {
+        std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+        return false;
+    }
+
+
     // My display is 1920 x 1080 but the following seems to work best to fill the screen.
     //const int SCREEN_WIDTH = 1540;
     //const int SCREEN_HEIGHT = 860;
@@ -139,6 +146,7 @@ void GameManager::OnDestroy(){
 	if (windowPtr) delete windowPtr;
 	if (timer) delete timer;
 	if (currentScene) delete currentScene;
+    TTF_Quit();
 }
 
 // This might be unfamiliar
