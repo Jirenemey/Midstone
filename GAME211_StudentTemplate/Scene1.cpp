@@ -34,18 +34,36 @@ bool Scene1::OnCreate() {
 	//game->getPlayer()->setImage(image);
 	//game->getPlayer()->setTexture(texture);
 	mouse.SetTexture(texture);
-	button.sourceRect.y = 0;
-	button.destinationRect.x = 1000 / 2;
-	button.destinationRect.y = 200;
-	button.SetTexture(renderer, "buttons2.png");
+	startButton.sourceRect.y = 500;
+	startButton.destinationRect.x = w/2 - startButton.sourceRect.w/2;
+	startButton.destinationRect.y = h/2 - startButton.sourceRect.h/2;
+	startButton.SetTexture(renderer, "buttons2.png");
+
+	applyButton.sourceRect.y = 100;
+	applyButton.destinationRect.x = w - w/3;
+	applyButton.destinationRect.y = h - h/4;
+	applyButton.SetTexture(renderer, "buttons2.png");
+
+	searchButton.sourceRect.y = 400;
+	searchButton.destinationRect.x = w - w/3;
+	searchButton.destinationRect.y = h - (h * 3/7);
+	searchButton.SetTexture(renderer, "buttons2.png");
+
+	titleText.x = w/4;
+	titleText.y = h/12;
+	border = new SDL_Rect();
+	border->w = w - w/15;
+	border->h = h - h/15;
+	border->x = w/2 - border->w/2;
+	border->y = h/2 - border->h/2;
 
 	return true;
 }
 
 void Scene1::OnDestroy() {
-	button.~Button();
+	startButton.~Button();
 	mouse.~Mouse();
-	text.~Text();
+	titleText.~Text();
 }
 
 void Scene1::Update(const float deltaTime) {
@@ -53,18 +71,29 @@ void Scene1::Update(const float deltaTime) {
 	// Update player
 	game->getPlayer()->Update(deltaTime);
 	mouse.Update();
-	button.Update(mouse);
+	startButton.Update(mouse);
+	applyButton.Update(mouse);
+	searchButton.Update(mouse);
 }
 
 void Scene1::Render() {
-	SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
 	// render the player
 	//game->RenderPlayer(1.0f);
-	button.Draw(renderer);
+	if (!start) {
+		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+		SDL_RenderFillRect(renderer, border);
+		startButton.Draw(renderer);
+		titleText.Draw(renderer);
+	}else {
+		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+		SDL_RenderClear(renderer);
+		searchButton.Draw(renderer);
+		applyButton.Draw(renderer);
+	}
 	mouse.Draw(renderer);
-	text.Draw(renderer);
 	SDL_RenderPresent(renderer);
 }
 
@@ -75,8 +104,17 @@ void Scene1::HandleEvents(const SDL_Event& event)
 	switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				if (button.isSelected) {
+				if (startButton.isSelected) {
 					std::cout << "Start button clicked" << std::endl;
+					start = true;
+				}
+				if (searchButton.isSelected) {
+					std::cout << "Search button clicked" << std::endl;
+					job.Search();
+				}
+				if (applyButton.isSelected) {
+					std::cout << "Apply button clicked" << std::endl;
+					job.Apply();
 				}
 			}
 	}

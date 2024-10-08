@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Button.h"
 #include "Text.h"
+#include "Job.h"
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -16,8 +17,15 @@ private:
 	Matrix4 projectionMatrix;	// set in OnCreate()
     Matrix4     inverseProjection;	// set in OnCreate()
 	Mouse mouse;
-	Button button;
-	Text text = Text("Atop.ttf", 100, "Hello world");
+	Button startButton;
+	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
+	Text tierText = Text("Atop.ttf", 50, "Tier: ");
+	Job job;
+	Button applyButton;
+	Button searchButton;
+	bool start = false;
+
+	SDL_Rect* border;
 	
 
 public:

@@ -26,7 +26,7 @@ void Button::SetTexture(SDL_Texture* texture_) {
 void Button::Update(Mouse &mouse) {
 	if (SDL_HasIntersection(&mouse.rect, &destinationRect)) {
 		isSelected = true;
-		sourceRect.x = 400;
+		sourceRect.x = 420;
 	}
 	else {
 		isSelected = false;

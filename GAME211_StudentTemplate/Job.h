@@ -10,7 +10,7 @@ public:
 	float accChance = 0;
 	bool accepted = false;
 	bool hasJob = false;
-
+	bool applied = false;
 
 	void Search();			// search for job
 	void Apply();			// apply for job
