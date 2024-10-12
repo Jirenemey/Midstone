@@ -6,27 +6,27 @@ void Job::Search() {
 		switch (experience) {
 		case 0:
 			tier = rand() % 5 + 1;
-			wage = rand() % 10 + 16 * (tier * experience);
+			wage = rand() % 10 + 16 * (tier * experience + 1);
 			break;
 		case 10:
 			tier = rand() % 4 + 2;
-			wage = rand() % 20 + 30 * (tier * experience);
+			wage = rand() % 20 + 30 * (tier * experience + 1);
 			break;
 		case 30:
 			tier = rand() % 3 + 3;
-			wage = rand() % 35 + 52 * (tier * experience);
+			wage = rand() % 35 + 52 * (tier * experience + 1);
 			break;
 		case 50:
 			tier = rand() % 2 + 4;
-			wage = rand() % 53 + 82 * (tier * experience);
+			wage = rand() % 53 + 82 * (tier * experience + 1);
 			break;
 		case 70:
 			tier = rand() % 1 + 5;
-			wage = rand() % 74 + 120 * (tier * experience);
+			wage = rand() % 74 + 120 * (tier * experience + 1);
 			break;
 		case 100:
 			tier = 5;
-			wage = rand() % 100 + 166 * (tier * experience);
+			wage = rand() % 100 + 166 * (tier * experience + 1);
 			break;
 		}
 		std::cout << "Tier: " << tier << std::endl;
@@ -41,7 +41,7 @@ void Job::Search() {
 void Job::Apply() {
 	// randomly lets player have job based on experience
 	if (applied == false) {
-		accChance = 10 / tier + experience;
+		accChance = 100 / tier + experience;
 		if (rand() % 100 + 1 < accChance && !hasJob) {
 			accepted = true;
 			hasJob = true;
@@ -58,12 +58,9 @@ void Job::Apply() {
 	}
 }
 
-void Job::StartJob() {
-
-}
-
 void Job::Wage(float performance) {
 	wallet += wage * performance; 
+	std::cout << "Wage: " << wage << "\nPerformance Multi: " << performance << "\nWallet: " << wallet << std::endl;
 }
 
 void Job::Quit() {

@@ -26,7 +26,6 @@ void PlayerBody::Render( float scale )
     Matrix4 projectionMatrix = game->getProjectionMatrix();
 
     // square represents the position and dimensions for where to draw the image
-    SDL_Rect square;
     Vec3 screenCoords;
     float    w, h;
 
@@ -55,6 +54,29 @@ void PlayerBody::Render( float scale )
 
 void PlayerBody::HandleEvents( const SDL_Event& event )
 {
+    if (tier == 1) {
+        switch (event.type) {
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_a) {
+                std::cout << "A button pressed" << std::endl;
+                this->vel.x = -10;
+            }
+            if (event.key.keysym.sym == SDLK_d){
+                std::cout << "D button pressed" << std::endl;
+                this->vel.x = 10;
+            }
+            break;
+        case SDL_KEYUP:
+            if (event.key.keysym.sym == SDLK_a) {
+                std::cout << "A button released" << std::endl;
+                this->vel.x = 0;
+            }
+            if (event.key.keysym.sym == SDLK_d) {
+                std::cout << "D button released" << std::endl;
+                this->vel.x = 0;
+            }
+        }
+    }
 }
 
 void PlayerBody::Update( float deltaTime )

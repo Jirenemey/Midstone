@@ -6,6 +6,7 @@
 #include "Button.h"
 #include "Text.h"
 #include "Job.h"
+#include "Item.h"
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -17,13 +18,23 @@ private:
 	Matrix4 projectionMatrix;	// set in OnCreate()
     Matrix4     inverseProjection;	// set in OnCreate()
 	Mouse mouse;
-	Button startButton;
+	Button playButton;
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
-	Text tierText = Text("Atop.ttf", 50, "Tier: ");
+
 	Job job;
+	Text tierText = Text("Atop.ttf", 50, "Tier: ");
+	Text wageText = Text("Atop.ttf", 50, "Wage: ");
 	Button applyButton;
 	Button searchButton;
-	bool start = false;
+	Button startButton;
+	bool play = false;
+
+	float time = 0;
+
+	Item tier1;
+
+	float bonus = 1;
+	int count = 0;
 
 	SDL_Rect* border;
 	
@@ -32,6 +43,7 @@ public:
 	// This constructor may be different from what you've seen before
 	// Notice the second parameter, and look in GameManager.cpp
 	// to see how this constructor is called.
+	void StartJob(int tier);
 	Scene1(SDL_Window* sdlWindow, GameManager* game_);
 	~Scene1();
 	bool OnCreate();

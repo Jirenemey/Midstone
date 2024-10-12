@@ -15,6 +15,11 @@ Text::~Text() {
 	delete displayText;
 }
 
+void Text::UpdateText(const char* _text) {
+	font = TTF_OpenFont(file, size);
+	displayText = TTF_RenderText_Solid(font, _text, { 255, 255, 255 });
+}
+
 void Text::Draw(SDL_Renderer* renderer) {
 	if (!text) {
 		std::cout << "Failed to render text: " << TTF_GetError() << std::endl;

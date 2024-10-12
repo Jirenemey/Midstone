@@ -18,9 +18,12 @@ protected:
     class GameManager* game;
 
 public:
+    SDL_Rect square;
+    int tier = 1;
     PlayerBody() : Body{}
     {
         game = nullptr;
+        square = { 0, 0, 0, 0 };
     }
 
     // Note the last parameter in this constructor!

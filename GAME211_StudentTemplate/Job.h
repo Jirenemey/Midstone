@@ -6,15 +6,15 @@ public:
 	float wage = 0;
 	int experience = 0;
 	int level = 0;
-	int tier = 0;
+	int tier = 1;
 	float accChance = 0;
 	bool accepted = false;
 	bool hasJob = false;
 	bool applied = false;
+	bool startJob = false;
 
 	void Search();			// search for job
 	void Apply();			// apply for job
-	void StartJob();		// start job
 	void Wage(float bonus); // amount paid
 	void Quit();			// quit job
 

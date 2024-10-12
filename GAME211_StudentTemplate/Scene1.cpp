@@ -29,15 +29,14 @@ bool Scene1::OnCreate() {
 	SDL_Surface* image;
 	SDL_Texture* texture;
 
+	//setting all buttons with images and location on screen
 	image = IMG_Load("mouse.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
-	//game->getPlayer()->setImage(image);
-	//game->getPlayer()->setTexture(texture);
 	mouse.SetTexture(texture);
-	startButton.sourceRect.y = 500;
-	startButton.destinationRect.x = w/2 - startButton.sourceRect.w/2;
-	startButton.destinationRect.y = h/2 - startButton.sourceRect.h/2;
-	startButton.SetTexture(renderer, "buttons2.png");
+	playButton.sourceRect.y = 500;
+	playButton.destinationRect.x = w/2 - playButton.sourceRect.w/2;
+	playButton.destinationRect.y = h/2 - playButton.sourceRect.h/2;
+	playButton.SetTexture(renderer, "buttons2.png");
 
 	applyButton.sourceRect.y = 100;
 	applyButton.destinationRect.x = w - w/3;
@@ -49,31 +48,59 @@ bool Scene1::OnCreate() {
 	searchButton.destinationRect.y = h - (h * 3/7);
 	searchButton.SetTexture(renderer, "buttons2.png");
 
+	startButton.sourceRect.y = 000;
+	startButton.destinationRect.x = w - (w * 4 / 5);
+	startButton.destinationRect.y = h - h / 4;
+	startButton.SetTexture(renderer, "buttons2.png");
+
 	titleText.x = w/4;
 	titleText.y = h/12;
+
+	tierText.y = h / 12;
 	border = new SDL_Rect();
 	border->w = w - w/15;
 	border->h = h - h/15;
 	border->x = w/2 - border->w/2;
 	border->y = h/2 - border->h/2;
 
+	image = IMG_Load("Pacman.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
+	game->getPlayer()->setImage(image);
+	game->getPlayer()->setTexture(texture);
+	tier1.SetImage(image);
+	tier1.SetTexture(texture);
+	tier1.SetPosition(Vec3(10, 10, 0));
+
+	game->getPlayer()->setPos(Vec3(10, 1, 0));
+
+
 	return true;
 }
 
 void Scene1::OnDestroy() {
-	startButton.~Button();
+	playButton.~Button();
 	mouse.~Mouse();
 	titleText.~Text();
 }
 
 void Scene1::Update(const float deltaTime) {
-
 	// Update player
 	game->getPlayer()->Update(deltaTime);
 	mouse.Update();
-	startButton.Update(mouse);
+	playButton.Update(mouse);
 	applyButton.Update(mouse);
 	searchButton.Update(mouse);
+	startButton.Update(mouse);
+	tier1.Update(deltaTime);
+
+	if (job.startJob == true) {
+		if (job.tier == 1) {
+			time += deltaTime;
+			if (time >= tier1.spawnTime) {
+				time = 0;
+			}
+		}
+	}
 }
 
 void Scene1::Render() {
@@ -81,17 +108,26 @@ void Scene1::Render() {
 	SDL_RenderClear(renderer);
 
 	// render the player
-	//game->RenderPlayer(1.0f);
-	if (!start) {
+	if (!play) {
 		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
 		SDL_RenderFillRect(renderer, border);
-		startButton.Draw(renderer);
+		playButton.Draw(renderer);
 		titleText.Draw(renderer);
-	}else {
-		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-		SDL_RenderClear(renderer);
-		searchButton.Draw(renderer);
-		applyButton.Draw(renderer);
+	}
+	else {
+		if (job.startJob) {
+			StartJob(job.tier);
+			game->getPlayer()->Render(0.10f);
+		}
+		else {
+			SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+			SDL_RenderClear(renderer);
+			searchButton.Draw(renderer);
+			applyButton.Draw(renderer);
+			startButton.Draw(renderer);
+			wageText.Draw(renderer);
+			tierText.Draw(renderer);
+		}
 	}
 	mouse.Draw(renderer);
 	SDL_RenderPresent(renderer);
@@ -100,13 +136,13 @@ void Scene1::Render() {
 void Scene1::HandleEvents(const SDL_Event& event)
 {
 	// send events to player as needed
-	//game->getPlayer()->HandleEvents(event);
+	game->getPlayer()->HandleEvents(event);
 	switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				if (startButton.isSelected) {
-					std::cout << "Start button clicked" << std::endl;
-					start = true;
+				if (playButton.isSelected) {
+					std::cout << "Play button clicked" << std::endl;
+					play = true;
 				}
 				if (searchButton.isSelected) {
 					std::cout << "Search button clicked" << std::endl;
@@ -115,8 +151,55 @@ void Scene1::HandleEvents(const SDL_Event& event)
 				if (applyButton.isSelected) {
 					std::cout << "Apply button clicked" << std::endl;
 					job.Apply();
+					if (job.hasJob) {
+						tierText.UpdateText("Tier: " + job.tier);
+					}
+				}
+				if (startButton.isSelected) {
+					std::cout << "Start button clicked" << std::endl;
+					if (job.hasJob) {
+						job.startJob = true;
+					}
 				}
 			}
 	}
 
+}
+
+void Scene1::StartJob(int tier) {
+	game->getPlayer()->tier = job.tier;
+	tier1.SetVelocity(Vec3(1, -10 + (1/(job.experience + 1) * 1.5f), -1));
+	switch (tier) {
+	case 1:
+		tier1.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+		if (tier1.GetPosition().y <= 0) {
+			bonus -= 0.1;
+			count++;
+			tier1.SetPosition(Vec3(rand() % 20, 15, 0));
+		}
+		else if (tier1.HasIntersection(game->getPlayer()->square)) {
+			bonus++;
+			count++;
+			tier1.SetPosition(Vec3(rand() % 20, 15, 0));
+			job.experience++;
+		}
+		break;
+	case 2:
+
+		break;
+	case 3:
+
+		break;
+	case 4:
+
+		break;
+	case 5:
+
+		break;
+	}
+	if (count == 10) {
+		count = 0;
+		job.startJob = false;
+		job.Wage(bonus);
+	}
 }

@@ -18,5 +18,6 @@ public:
 	Text(const char* _file, int _size, const char* _text);
 	~Text();
 	void Draw(SDL_Renderer* renderer);
+	void UpdateText(const char* _text);
 };
 
