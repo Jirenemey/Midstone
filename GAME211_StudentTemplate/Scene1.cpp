@@ -201,5 +201,6 @@ void Scene1::StartJob(int tier) {
 		count = 0;
 		job.startJob = false;
 		job.Wage(bonus);
+		bonus = 0;
 	}
 }
