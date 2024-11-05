@@ -15,6 +15,7 @@ bool PlayerBody::OnCreate()
     if (image == nullptr) {
         std::cerr << "Can't open the image" << std::endl;
         return false;
+
     }
     return true;
 }
