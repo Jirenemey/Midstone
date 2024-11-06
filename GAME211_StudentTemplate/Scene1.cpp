@@ -203,6 +203,9 @@ void Scene1::StartJob(int tier) {
 		count = 0;
 		job.startJob = false;
 		job.Wage(bonus);
-		bonus = 0;
+		wageText.UpdateText("Wage: ");
+		tierText.UpdateText("Tier: ");
+		bonus = 1;
+		std::cout << "Experience: " << job.experience << std::endl;
 	}
 }
