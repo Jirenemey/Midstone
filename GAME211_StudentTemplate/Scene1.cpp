@@ -63,6 +63,8 @@ bool Scene1::OnCreate() {
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	game->getPlayer()->setImage(image);
 	game->getPlayer()->setTexture(texture);
+	image = IMG_Load("Textures/Pinky.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier1.SetImage(image);
 	tier1.SetTexture(texture);
 	tier1.SetPosition(Vec3(10, 10, 0));
