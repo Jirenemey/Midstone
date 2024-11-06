@@ -13,6 +13,9 @@ public:
 	bool applied = false;
 	bool startJob = false;
 
+	int wageUpgrade = 1;
+	int jobAccChance = 1;
+
 	void Search();			// search for job
 	void Apply();			// apply for job
 	void Wage(float bonus); // amount paid

@@ -2,11 +2,14 @@
 #define SCENE1_H
 
 #include <MMath.h>
+#include <sstream>
+#include <string>
 #include "Scene.h"
 #include "Button.h"
 #include "Text.h"
 #include "Job.h"
 #include "Item.h"
+#include "People.h"
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -16,27 +19,38 @@ private:
 	SDL_Window* window;		// an SDL window with a SDL renderer
 	SDL_Renderer* renderer;	// the renderer associated with SDL window
 	Matrix4 projectionMatrix;	// set in OnCreate()
-    Matrix4     inverseProjection;	// set in OnCreate()
+	Matrix4     inverseProjection;	// set in OnCreate()
+	SDL_Surface* image;
+	SDL_Texture* texture;
+
 	Mouse mouse;
+	// title / menu variables
 	Button playButton;
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
+	bool play = false;
+	SDL_Rect* border;
 
+	// job variables
 	Job job;
 	Text tierText = Text("Atop.ttf", 50, "Tier: ");
 	Text wageText = Text("Atop.ttf", 50, "Wage: ");
 	Button applyButton;
 	Button searchButton;
 	Button startButton;
-	bool play = false;
-
 	float time = 0;
-
-	Item tier1;
-
 	float bonus = 1;
 	int count = 0;
 
-	SDL_Rect* border;
+	//tier 1 variables
+	Item tier1;
+
+	//tier 3 variables
+	People tier3;
+
+	//tier 4 variables
+	People tier4[6];
+	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
+	float sleepTimer[6];
 	
 
 public:
