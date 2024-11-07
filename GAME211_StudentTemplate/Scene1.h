@@ -16,7 +16,7 @@ private:
 	SDL_Window* window;		// an SDL window with a SDL renderer
 	SDL_Renderer* renderer;	// the renderer associated with SDL window
 	Matrix4 projectionMatrix;	// set in OnCreate()
-    Matrix4     inverseProjection;	// set in OnCreate()
+    Matrix4 inverseProjection;	// set in OnCreate()
 	Mouse mouse;
 	Button playButton;
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
@@ -37,7 +37,9 @@ private:
 	int count = 0;
 
 	SDL_Rect* border;
-	
+
+	SDL_Surface* tier1Background;
+	SDL_Texture* BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
 
 public:
 	// This constructor may be different from what you've seen before

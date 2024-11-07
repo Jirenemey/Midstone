@@ -63,12 +63,13 @@ bool Scene1::OnCreate() {
 	border->x = w/2 - border->w/2;
 	border->y = h/2 - border->h/2;
 
-	image = IMG_Load("Pacman.png");
+	tier1Background = IMG_Load("Textures/ShoppingAisle.png");
+	BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
+
+	image = IMG_Load("Textures/ShoppingCart.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	game->getPlayer()->setImage(image);
 	game->getPlayer()->setTexture(texture);
-	image = IMG_Load("Textures/Pinky.png");
-	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier1.SetImage(image);
 	tier1.SetTexture(texture);
 	tier1.SetPosition(Vec3(10, 10, 0));
@@ -108,6 +109,8 @@ void Scene1::Update(const float deltaTime) {
 void Scene1::Render() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
+	
+	//SDL_RenderCopy(renderer, BackgroundTexture, NULL, NULL);
 
 	// render the player
 	if (!play) {
@@ -119,7 +122,7 @@ void Scene1::Render() {
 	else {
 		if (job.startJob) {
 			StartJob(job.tier);
-			game->getPlayer()->Render(0.10f);
+			game->getPlayer()->Render(0.20f);
 		}
 		else {
 			SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
@@ -171,9 +174,11 @@ void Scene1::HandleEvents(const SDL_Event& event)
 void Scene1::StartJob(int tier) {
 	game->getPlayer()->tier = job.tier;
 	tier1.SetVelocity(Vec3(1, -10 + (1/(job.experience + 1) * 1.5f), -1));
+	SDL_RenderCopy(renderer, BackgroundTexture, NULL, NULL);
 	switch (tier) {
 	case 1:
-		tier1.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+
+		tier1.Draw(renderer, game->getProjectionMatrix(), 0.15f);
 		if (tier1.GetPosition().y <= 0) {
 			bonus -= 0.1;
 			count++;
