@@ -59,15 +59,24 @@ bool Scene1::OnCreate() {
 	border->x = w/2 - border->w/2;
 	border->y = h/2 - border->h/2;
 
+	// tier1 background
 	tier1Background = IMG_Load("Textures/ShoppingAisle.png");
 	BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
-
+	// tier1 player
 	image = IMG_Load("Textures/ShoppingCart.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	game->getPlayer()->setImage(image);
 	game->getPlayer()->setTexture(texture);
+	// tier1 assets - 4 of them
+	tier1Assets[0] = "Textures/PurpleBox.png";
+	tier1Assets[1] = "Textures/Bottle.png";
+	tier1Assets[2] = "Textures/CanTomatoes.png";
+	tier1Assets[3] = "Textures/BrownBox.png";
+	image = IMG_Load(tier1Assets[rand() % 4]);
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier1.SetImage(image);
 	tier1.SetTexture(texture);
+	// initial spawn
 	tier1.SetPosition(Vec3(10, 10, 0));
 
 	tier3.SetImage(image);
@@ -203,21 +212,28 @@ void Scene1::HandleEvents(const SDL_Event& event)
 void Scene1::StartJob(int tier) {
 	game->getPlayer()->tier = job.tier;
 	tier1.SetVelocity(Vec3(1, -10 + (1/(job.experience + 1) * 1.5f), -1));
-	SDL_RenderCopy(renderer, BackgroundTexture, NULL, NULL);
 	switch (tier) {
 	case 1:
-
+		SDL_RenderCopy(renderer, BackgroundTexture, NULL, NULL);
 		tier1.Draw(renderer, game->getProjectionMatrix(), 0.15f);
 		if (tier1.GetPosition().y <= 0) {
 			bonus -= 0.1;
 			count++;
 			tier1.SetPosition(Vec3(rand() % 20, 15, 0));
+			image = IMG_Load(tier1Assets[rand() % 4]);
+			texture = SDL_CreateTextureFromSurface(renderer, image);
+			tier1.SetImage(image);
+			tier1.SetTexture(texture);
 		}
 		else if (tier1.HasIntersection(game->getPlayer()->square)) {
 			bonus += 0.2;
 			count++;
 			tier1.SetPosition(Vec3(rand() % 20, 15, 0));
 			job.experience++;
+			image = IMG_Load(tier1Assets[rand() % 4]);
+			texture = SDL_CreateTextureFromSurface(renderer, image);
+			tier1.SetImage(image);
+			tier1.SetTexture(texture);
 		}
 		break;
 	case 2:
