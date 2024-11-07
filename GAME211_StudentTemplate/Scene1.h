@@ -19,10 +19,14 @@ private:
 	SDL_Window* window;		// an SDL window with a SDL renderer
 	SDL_Renderer* renderer;	// the renderer associated with SDL window
 	Matrix4 projectionMatrix;	// set in OnCreate()
+<<<<<<< HEAD
 	Matrix4     inverseProjection;	// set in OnCreate()
 	SDL_Surface* image;
 	SDL_Texture* texture;
 
+=======
+    Matrix4 inverseProjection;	// set in OnCreate()
+>>>>>>> josh-branch
 	Mouse mouse;
 	// title / menu variables
 	Button playButton;
@@ -41,6 +45,7 @@ private:
 	float bonus = 1;
 	int count = 0;
 
+<<<<<<< HEAD
 	//tier 1 variables
 	Item tier1;
 
@@ -52,6 +57,12 @@ private:
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
 	
+=======
+	SDL_Rect* border;
+
+	SDL_Surface* tier1Background;
+	SDL_Texture* BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
+>>>>>>> josh-branch
 
 public:
 	// This constructor may be different from what you've seen before
