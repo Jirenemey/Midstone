@@ -5,6 +5,8 @@
 
 using namespace MATH;
 
+// class for tier 1 & 2 logic
+
 class Item : Body {
 public:
 	float spawnTime;

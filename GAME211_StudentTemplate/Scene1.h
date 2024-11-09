@@ -24,44 +24,55 @@ private:
 	SDL_Texture* texture;
 
 	Mouse mouse;
-	// title / menu variables
+	//****************MAIN MENU******************************//
 	Button playButton;
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
 	bool play = false;
 	SDL_Rect* border;
 
-	// job variables
+	//***************GAME SCREEN*****************************//
 	Job job;
-	Text tierText = Text("Atop.ttf", 50, "Tier: ");
-	Text wageText = Text("Atop.ttf", 50, "Wage: ");
+	Text tierText = Text("Atop.ttf", 50, "Tier: N/A");
+	Text wageText = Text("Atop.ttf", 50, "Wage: $0");
+	Text walletText = Text("Atop.ttf", 50, "Wallet: $0");
+	Text experienceText = Text("Atop.ttf", 50, "Exp: 0");
 	Button applyButton;
 	Button searchButton;
 	Button startButton;
+
+	//*****************UPGRADE SCREEN**************************//
+	Button upgradeScreenButton; // enter upgrade screen
+	Button backButton; // exit upgrade screen
+	bool upgradeScreen = false;
+	// upgrade screen buttons
+	Button upgradeWageButton;
+	Button upgradeExpButton;
+	Button upgradeAccButton;
 	float time = 0;
 	float bonus = 1;
 	int count = 0;
 
-	//tier 1 variables
+	//*******************JOBS********************************//
+	// Tier1
 	Item tier1;
 	const char* tier1Assets[4];
+	SDL_Surface* tier1Background;
+	SDL_Texture* BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
 
-	//tier 3 variables
+	// Tier3
 	People tier3;
 
-	//tier 4 variables
+	// Tier4
 	People tier4[6];
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
-
-
-	SDL_Surface* tier1Background;
-	SDL_Texture* BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
 
 public:
 	// This constructor may be different from what you've seen before
 	// Notice the second parameter, and look in GameManager.cpp
 	// to see how this constructor is called.
 	void StartJob(int tier);
+	std::string SetText(const char* text, float num);
 	Scene1(SDL_Window* sdlWindow, GameManager* game_);
 	~Scene1();
 	bool OnCreate();

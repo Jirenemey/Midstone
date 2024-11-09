@@ -1,5 +1,6 @@
 #include "Scene1.h"
 #include <VMath.h>
+#include <iomanip>
 
 // See notes about this constructor in Scene1.h.
 Scene1::Scene1(SDL_Window* sdlWindow_, GameManager* game_){
@@ -24,35 +25,65 @@ bool Scene1::OnCreate() {
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
 
-
-	//setting all buttons with images and location on screen
+	// mouse cursor
 	image = IMG_Load("mouse.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	mouse.SetTexture(texture);
-	playButton.sourceRect.y = 500;
+
+	// setting all buttons with images and location on screen
+	// start menu button
+	playButton.sourceRect.y = 600;
 	playButton.destinationRect.x = w/2 - playButton.sourceRect.w/2;
 	playButton.destinationRect.y = h/2 - playButton.sourceRect.h/2;
-	playButton.SetTexture(renderer, "buttons2.png");
-
+	playButton.SetTexture(renderer, "Textures/buttons2.png");
+	// main game buttons
 	applyButton.sourceRect.y = 100;
 	applyButton.destinationRect.x = w - w/3;
 	applyButton.destinationRect.y = h - h/4;
-	applyButton.SetTexture(renderer, "buttons2.png");
+	applyButton.SetTexture(renderer, "Textures/buttons2.png");
 
 	searchButton.sourceRect.y = 400;
 	searchButton.destinationRect.x = w - w/3;
 	searchButton.destinationRect.y = h - (h * 3/7);
-	searchButton.SetTexture(renderer, "buttons2.png");
+	searchButton.SetTexture(renderer, "Textures/buttons2.png");
 
 	startButton.sourceRect.y = 000;
 	startButton.destinationRect.x = w - (w * 4 / 5);
 	startButton.destinationRect.y = h - h / 4;
-	startButton.SetTexture(renderer, "buttons2.png");
+	startButton.SetTexture(renderer, "Textures/buttons2.png");
+	// upgrade buttons
+	upgradeScreenButton.sourceRect.y = 000;
+	upgradeScreenButton.destinationRect.x = w - w / 3;
+	upgradeScreenButton.destinationRect.y = h - h/ 2;
+	upgradeScreenButton.SetTexture(renderer, "Textures/buttons3.png");
+
+	upgradeAccButton.sourceRect.y = 300;
+	upgradeAccButton.destinationRect.x = w - (w * 0.95);
+	upgradeAccButton.destinationRect.y = h - h / 2;
+	upgradeAccButton.SetTexture(renderer, "Textures/buttons3.png");
+
+	upgradeWageButton.sourceRect.y = 100;
+	upgradeWageButton.destinationRect.x = w - (w * 0.95) + 300;
+	upgradeWageButton.destinationRect.y = h - h / 2;
+	upgradeWageButton.SetTexture(renderer, "Textures/buttons3.png");
+
+	upgradeExpButton.sourceRect.y = 200;
+	upgradeExpButton.destinationRect.x = w - (w * 0.95) + 600;
+	upgradeExpButton.destinationRect.y = h - h / 2;
+	upgradeExpButton.SetTexture(renderer, "Textures/buttons3.png");
+
+	backButton.sourceRect.y = 200;
+	backButton.destinationRect.x = 0;
+	backButton.destinationRect.y = h - (h * 9/10) ;
+	backButton.SetTexture(renderer, "Textures/buttons2.png");
+
 
 	titleText.x = w/4;
 	titleText.y = h/12;
 
-	tierText.y = h / 12;
+	tierText.y = h/12;
+	walletText.y = h/12 + 50;
+	experienceText.y = h/12 + 100;
 	border = new SDL_Rect();
 	border->w = w - w/15;
 	border->h = h - h/15;
@@ -106,10 +137,20 @@ void Scene1::Update(const float deltaTime) {
 	game->getPlayer()->Update(deltaTime);
 	mouse.Update();
 	playButton.Update(mouse);
-	applyButton.Update(mouse);
-	searchButton.Update(mouse);
-	startButton.Update(mouse);
-	tier1.Update(deltaTime);
+	if (play && !upgradeScreen) {
+		applyButton.Update(mouse);
+		searchButton.Update(mouse);
+		startButton.Update(mouse);
+		upgradeScreenButton.Update(mouse);
+	}
+	if (upgradeScreen) {
+		upgradeAccButton.Update(mouse);
+		upgradeExpButton.Update(mouse);
+		upgradeWageButton.Update(mouse);
+		backButton.Update(mouse);
+	}
+	if(job.tier == 1)
+		tier1.Update(deltaTime);
 	if (job.startJob && job.tier == 4) {
 		for (int i = 0; i < tier4Size; i++) {
 			tier4[i].Update(deltaTime);
@@ -134,6 +175,15 @@ void Scene1::Render() {
 		playButton.Draw(renderer);
 		titleText.Draw(renderer);
 	}
+	else if (upgradeScreen) {
+		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+		SDL_RenderClear(renderer);
+		upgradeAccButton.Draw(renderer);
+		upgradeExpButton.Draw(renderer);
+		upgradeWageButton.Draw(renderer);
+		backButton.Draw(renderer);
+		walletText.Draw(renderer);
+	}
 	else {
 		if (job.startJob) {
 			StartJob(job.tier);
@@ -145,8 +195,11 @@ void Scene1::Render() {
 			searchButton.Draw(renderer);
 			applyButton.Draw(renderer);
 			startButton.Draw(renderer);
+			upgradeScreenButton.Draw(renderer);
 			wageText.Draw(renderer);
 			tierText.Draw(renderer);
+			walletText.Draw(renderer);
+			experienceText.Draw(renderer);
 		}
 	}
 	mouse.Draw(renderer);
@@ -160,35 +213,55 @@ void Scene1::HandleEvents(const SDL_Event& event)
 	switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				if (playButton.isSelected) {
+				if (playButton.isSelected && play == false) {
 					std::cout << "Play button clicked" << std::endl;
 					play = true;
 				}
-				if (searchButton.isSelected) {
-					std::cout << "Search button clicked" << std::endl;
-					job.Search();
-				}
-				if (applyButton.isSelected) {
-					std::cout << "Apply button clicked" << std::endl;
-					job.Apply();
-					if (job.hasJob) {
-						//change tier & wage display
-						std::stringstream strm; // for numbers
-						strm << "Tier: " << job.tier; // text to change
-						tierText.UpdateText(strm.str().c_str()); // display text
-						strm.str(std::string()); // clear text
-						//repeat for wage
-
-						strm << "Wage: " << job.wage;
-						wageText.UpdateText(strm.str().c_str());
-						strm.str(std::string());
+				if (play && !upgradeScreen) {
+					if (searchButton.isSelected) {
+						std::cout << "Search button clicked" << std::endl;
+						// remember to display tier and wage values before being accepted or declined as the console will not be present during gameplay
+						job.Search();
+					}
+					if (applyButton.isSelected) {
+						std::cout << "Apply button clicked" << std::endl;
+						job.Apply();
+						if (job.hasJob) {
+							tierText.UpdateText(SetText("Tier: ", job.tier)); // display text
+							wageText.UpdateText(SetText("Wage: $", job.wage));
+						}
+					}
+					if (startButton.isSelected) {
+						std::cout << "Start button clicked" << std::endl;
+						if (job.hasJob) {
+							job.startJob = true;
+							time = 0;
+						}
 					}
 				}
-				if (startButton.isSelected) {
-					std::cout << "Start button clicked" << std::endl;
-					if (job.hasJob) {
-						job.startJob = true;
+				if (upgradeScreenButton.isSelected && upgradeScreen == false) {
+					std::cout << "Upgrade button clicked" << std::endl;
+					upgradeScreen = true;
+					walletText.x = backButton.destinationRect.x + 500;
+					walletText.y = backButton.destinationRect.y;
+				}
+				if (upgradeScreen) {
+					if (backButton.isSelected) {
+						std::cout << "Back button clicked" << std::endl;
+						upgradeScreen = false;
+						backButton.isSelected = false;
+						walletText.x = 0;
+						walletText.y = tierText.y + 50;
+						walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					}
+					if (upgradeAccButton.isSelected) 
+						job.UpgradeJobAcc();
+					if (upgradeExpButton.isSelected)
+						job.UpgradeExperience();
+					if (upgradeWageButton.isSelected)
+						job.UpgradeWage();
+					walletText.UpdateText(SetText("Wallet: $", job.wallet));
+					std::cout << "Wallet: " << job.wallet << std::endl;
 				}
 				if (job.tier == 3) {
 					if (tier3.HasIntersection(mouse.rect)) {
@@ -243,7 +316,7 @@ void Scene1::StartJob(int tier) {
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
 		if (time > 5) {
 			// if robber is in store for more than 5 seconds you lose bonus
-			// and you lose 2% of your wallet
+			// and you lose 2% of your wallet (got robbed)
 			job.wallet -= job.wallet * (0.02f);
 			bonus -= 0.1;
 			count++;
@@ -295,7 +368,7 @@ void Scene1::StartJob(int tier) {
 
 		break;
 	}
-	if (count == 10 || time == 30) {
+	if (count == 10 || time >= 30) {
 		// after each job is complete - reset core mechanics
 		// job is reset and you must search and apply for a new one
 		count = 0;
@@ -303,9 +376,19 @@ void Scene1::StartJob(int tier) {
 		job.Quit();
 		job.applied = true;
 		job.Wage(bonus);
-		wageText.UpdateText("Wage: ");
-		tierText.UpdateText("Tier: ");
+		wageText.UpdateText("Wage: $0");
+		tierText.UpdateText("Tier: N/A");
+		walletText.UpdateText(SetText("Wallet: $", job.wallet));
+		experienceText.UpdateText(SetText("Exp: ", job.experience));
 		bonus = 1;
 		std::cout << "Experience: " << job.experience << std::endl;
 	}
+}
+
+std::string Scene1::SetText(const char* text, float num)
+{
+	// in order to display numbers
+	std::stringstream strm;
+	strm << text << num << std::setprecision(2);
+	return strm.str().c_str();
 }

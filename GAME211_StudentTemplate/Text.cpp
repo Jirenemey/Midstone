@@ -15,9 +15,9 @@ Text::~Text() {
 	delete displayText;
 }
 
-void Text::UpdateText(const char* _text) {
+void Text::UpdateText(std::string _text) {
 	font = TTF_OpenFont(file, size);
-	displayText = TTF_RenderText_Solid(font, _text, { 255, 255, 255 });
+	displayText = TTF_RenderText_Solid(font, _text.c_str(), {255, 255, 255});
 }
 
 void Text::Draw(SDL_Renderer* renderer) {

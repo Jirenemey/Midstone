@@ -1,7 +1,7 @@
 #include "Job.h"
 
 void Job::Search() {
-	// randomly sets tier and wage of job while searching
+	// randomly sets tier and wage of job while searching based on percentage
 	if (hasJob == false) {
 		int x = rand() % 100 + 1;
 		if (experience < 10) {			// less than 10 experience
@@ -94,7 +94,7 @@ void Job::Search() {
 void Job::Apply() {
 	// randomly lets player have job based on experience
 	if (applied == false) {
-		accChance = 1000 / tier + experience; // set base value to 10 (100 for testing purposes)
+		accChance = 1000 / tier + experience; // 1000 for testing purposes - real formula: (10 + (jobAccChanceLevel * 3)) / (tier - (experience/100));
 		if (rand() % 100 + 1 < accChance && !hasJob) {
 			accepted = true;
 			hasJob = true;
@@ -112,10 +112,46 @@ void Job::Apply() {
 }
 
 void Job::Wage(float performance) {
-	wallet += wage * performance; 
+	wallet += wage * pow(1.1, wageUpgradeLevel) * performance; 
 	std::cout << "Wage: " << wage << "\nPerformance Multi: " << performance << "\nWallet: " << wallet << std::endl;
 }
 
 void Job::Quit() {
 	hasJob = false;
+}
+
+void Job::UpgradeJobAcc() {
+	float price = pow(jobAccChanceLevel, 4.7) * 25; // formula for price calculation
+	int maxLevel = 10;
+	if (wallet >= price && jobAccChanceLevel < maxLevel) {
+		jobAccChanceLevel++;
+		wallet -= price;
+	}
+	else {
+		std::cout << "Insufficient funds for HIRE CHANCE UPGRADE." << std::endl;
+	}
+}
+
+void Job::UpgradeWage() {
+	float price = pow(wageUpgradeLevel, 3.1) * 70; // formula for price calculation
+	int maxLevel = 25;
+	if (wallet >= price && wageUpgradeLevel < maxLevel) {
+		wageUpgradeLevel++;
+		wallet -= price;
+	}
+	else {
+		std::cout << "Insufficient funds for WAGE UPGRADE." << std::endl;
+	}
+}
+
+void Job::UpgradeExperience() {
+	float price = pow(experienceLevel, 4.2) * 40; // formula for price calculation
+	int maxLevel = 20;
+	if (wallet >= price && experienceLevel < maxLevel) {
+		experienceLevel++;
+		wallet -= price;
+	}
+	else {
+		std::cout << "Insufficient funds for EXP UPGRADE." << std::endl;
+	}
 }
