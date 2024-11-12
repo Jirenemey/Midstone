@@ -7,10 +7,21 @@ class People : Body
 {
 public:
 	SDL_Rect square;
-	int clicks = 0;
-	bool asleep = false;
-	float timer = 0.0f;
-	float sleepTimer = 1.0f;
+	int clicks;
+	bool asleep;
+	float timer;
+	float sleepTimer;
+	bool sleepImage;
+
+	People() {
+		clicks = 0;
+		asleep = false;
+		timer = 0.0f;
+		sleepTimer = 1.0f;
+		sleepImage = false;
+		square.w = 50;
+		square.h = 50;
+	};
 
 	void SetTexture(SDL_Texture* _texture);
 	void SetImage(SDL_Surface* _image);

@@ -117,7 +117,7 @@ bool Scene1::OnCreate() {
 	for (int i = 0; i < tier4Size; i++) {
 		tier4[i].SetImage(image);
 		tier4[i].SetTexture(texture);
-		tier4[i].SetPosition(Vec3(rand() % 30, rand() % 20, 0));
+		tier4[i].SetPosition(Vec3(rand() % 20 + 5, rand() % 20 + 5, 0));
 	}
 
 	game->getPlayer()->setPos(Vec3(10, 1, 0));
@@ -153,9 +153,10 @@ void Scene1::Update(const float deltaTime) {
 		tier1.Update(deltaTime);
 	if (job.startJob && job.tier == 4) {
 		for (int i = 0; i < tier4Size; i++) {
-			tier4[i].Update(deltaTime);
 			if(tier4[i].asleep)
 				sleepTimer[i] += deltaTime;
+			else
+				tier4[i].Update(deltaTime);
 		}
 	}
 
@@ -263,17 +264,19 @@ void Scene1::HandleEvents(const SDL_Event& event)
 					walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					std::cout << "Wallet: " << job.wallet << std::endl;
 				}
-				if (job.tier == 3) {
-					if (tier3.HasIntersection(mouse.rect)) {
-						tier3.clicks++;
-						std::cout << "Tier 3 Clicks: " << tier3.clicks << std::endl;
+				if (job.startJob) {
+					if (job.tier == 3) {
+						if (tier3.HasIntersection(mouse.rect)) {
+							tier3.clicks++;
+							std::cout << "Tier 3 Clicks: " << tier3.clicks << std::endl;
+						}
 					}
-				}
-				if (job.tier == 4) {
-					for (int i = 0; i < tier4Size; i++) {
-						if (tier4[i].HasIntersection(mouse.rect) && tier4[i].asleep) {
-							tier4[i].clicks++;
-							std::cout << "Tier 4 asleep: " << i << "\nClicks: " << tier4[i].clicks << std::endl;
+					if (job.tier == 4) {
+						for (int i = 0; i < tier4Size; i++) {
+							if (tier4[i].HasIntersection(mouse.rect) && tier4[i].asleep) {
+								tier4[i].clicks++;
+								std::cout << "Tier 4 asleep: " << i << "\nClicks: " << tier4[i].clicks << std::endl;
+							}
 						}
 					}
 				}
@@ -336,7 +339,8 @@ void Scene1::StartJob(int tier) {
 	case 4:
 		for (int i = 0; i < tier4Size; i++) {
 			tier4[i].Draw(renderer, game->getProjectionMatrix(), 0.10f);
-			if (sleepTimer[i] > 0) {
+			if (sleepTimer[i] > 0 && !tier4[i].sleepImage) {
+				tier4[i].sleepImage = true;
 				image = IMG_Load("Textures/Blinky.png");
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
@@ -348,18 +352,19 @@ void Scene1::StartJob(int tier) {
 				count++;
 				sleepTimer[i] = 0;
 			}
-			else if (tier4[i].clicks == 10) {
+			else if (tier4[i].clicks == 5) {
 				// if worker is asleep and you wake him you get bonus + experience
 				bonus += 0.2;
 				count++;
 				job.experience++;
 				tier4[i].clicks = 0;
 				sleepTimer[i] = 0;
-				tier4[i].asleep = false;
 				image = IMG_Load("Pacman.png");
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
 				tier4[i].SetTexture(texture);
+				tier4[i].sleepImage = false;
+				tier4[i].asleep = false;
 			}
 		}
 
@@ -376,11 +381,22 @@ void Scene1::StartJob(int tier) {
 		job.Quit();
 		job.applied = true;
 		job.Wage(bonus);
+		bonus = 1;
+		for (int i = 0; i < tier4Size; i++) {
+			tier4[i].asleep = false;
+			tier4[i].sleepImage = false;
+			image = IMG_Load("Pacman.png");
+			texture = SDL_CreateTextureFromSurface(renderer, image);
+			tier4[i].SetImage(image);
+			tier4[i].SetTexture(texture);
+		}
+
+
+		// update gui
 		wageText.UpdateText("Wage: $0");
 		tierText.UpdateText("Tier: N/A");
 		walletText.UpdateText(SetText("Wallet: $", job.wallet));
 		experienceText.UpdateText(SetText("Exp: ", job.experience));
-		bonus = 1;
 		std::cout << "Experience: " << job.experience << std::endl;
 	}
 }

@@ -10,7 +10,7 @@ public:
 	float accChance = 0;
 	bool accepted = false;
 	bool hasJob = false;
-	bool applied = false;
+	bool applied = true;
 	bool startJob = false;
 
 	int wageUpgradeLevel = 0;

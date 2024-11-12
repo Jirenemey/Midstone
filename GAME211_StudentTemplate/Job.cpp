@@ -112,6 +112,8 @@ void Job::Apply() {
 }
 
 void Job::Wage(float performance) {
+	if (performance < 0) // if you do very terribly and go negative you dont lose money but get paid 0
+		performance = 0;
 	wallet += wage * pow(1.1, wageUpgradeLevel) * performance; 
 	std::cout << "Wage: " << wage << "\nPerformance Multi: " << performance << "\nWallet: " << wallet << std::endl;
 }
@@ -126,6 +128,7 @@ void Job::UpgradeJobAcc() {
 	if (wallet >= price && jobAccChanceLevel < maxLevel) {
 		jobAccChanceLevel++;
 		wallet -= price;
+		std::cout << "Hire Chance Upgrade Level: " << experienceLevel << std::endl;
 	}
 	else {
 		std::cout << "Insufficient funds for HIRE CHANCE UPGRADE." << std::endl;
@@ -138,6 +141,7 @@ void Job::UpgradeWage() {
 	if (wallet >= price && wageUpgradeLevel < maxLevel) {
 		wageUpgradeLevel++;
 		wallet -= price;
+		std::cout << "Wage Upgrade Level: " << experienceLevel << std::endl;
 	}
 	else {
 		std::cout << "Insufficient funds for WAGE UPGRADE." << std::endl;
@@ -150,6 +154,7 @@ void Job::UpgradeExperience() {
 	if (wallet >= price && experienceLevel < maxLevel) {
 		experienceLevel++;
 		wallet -= price;
+		std::cout << "Experience Upgrade Level: " << experienceLevel << std::endl;
 	}
 	else {
 		std::cout << "Insufficient funds for EXP UPGRADE." << std::endl;
