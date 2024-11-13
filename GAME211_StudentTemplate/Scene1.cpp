@@ -342,6 +342,7 @@ void Scene1::StartJob(int tier) {
 		tier2.Draw(renderer, game->getProjectionMatrix(), 0.10f);
 		if (tier2.GetPosition().x >= 25) {
 			count++;
+			std::cout << "The Object Counter Has Increased: " << tier2Counter << std::endl;
 			tier2Counter++;
 			tier2.SetPosition(Vec3(-1, rand() % 15, 0));
 		}
