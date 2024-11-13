@@ -243,7 +243,7 @@ void Scene1::HandleEvents(const SDL_Event& event)
 				if (upgradeScreenButton.isSelected && upgradeScreen == false) {
 					std::cout << "Upgrade button clicked" << std::endl;
 					upgradeScreen = true;
-					walletText.x = backButton.destinationRect.x + 500;
+					walletText.x = backButton.destinationRect.x + 300;
 					walletText.y = backButton.destinationRect.y;
 				}
 				if (upgradeScreen) {
@@ -262,7 +262,6 @@ void Scene1::HandleEvents(const SDL_Event& event)
 					if (upgradeWageButton.isSelected)
 						job.UpgradeWage();
 					walletText.UpdateText(SetText("Wallet: $", job.wallet));
-					std::cout << "Wallet: " << job.wallet << std::endl;
 				}
 				if (job.startJob) {
 					if (job.tier == 3) {
@@ -405,6 +404,10 @@ std::string Scene1::SetText(const char* text, float num)
 {
 	// in order to display numbers
 	std::stringstream strm;
-	strm << text << num << std::setprecision(2);
+	if (num >= 1000000)
+		strm << text << num / 1000000 << std::setprecision(2) << " Million";
+	else
+		strm << text << num << std::setprecision(2);
+
 	return strm.str().c_str();
 }
