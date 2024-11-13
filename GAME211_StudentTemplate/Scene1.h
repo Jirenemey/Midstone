@@ -59,7 +59,13 @@ private:
 	SDL_Surface* tier1Background;
 	SDL_Texture* BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
 
-	// Tier3
+	//tier 2 variables
+	Item tier2;
+	int tier2Counter = 0;
+	int tier2CounterPlayer = 0;
+	Button tier2CounterBtn;
+
+	//tier 3 variables
 	People tier3;
 
 	// Tier4

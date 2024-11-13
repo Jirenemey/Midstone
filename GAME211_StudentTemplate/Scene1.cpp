@@ -110,6 +110,16 @@ bool Scene1::OnCreate() {
 	// initial spawn
 	tier1.SetPosition(Vec3(10, 10, 0));
 
+	image = IMG_Load("Textures/PurpleBox.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
+	tier2.SetImage(image);
+	tier2.SetTexture(texture);
+	tier2.SetPosition(Vec3(1, 10, 0));
+	tier2CounterBtn.sourceRect.y = 000;
+	tier2CounterBtn.destinationRect.x = w - (w * 1 / 2);
+	tier2CounterBtn.destinationRect.y = h - h / 6;
+	tier2CounterBtn.SetTexture(renderer, "Textures/RedButton.png");
+
 	tier3.SetImage(image);
 	tier3.SetTexture(texture);
 	tier3.SetPosition(Vec3(10, 10, 0));
@@ -137,6 +147,12 @@ void Scene1::Update(const float deltaTime) {
 	game->getPlayer()->Update(deltaTime);
 	mouse.Update();
 	playButton.Update(mouse);
+	applyButton.Update(mouse);
+	searchButton.Update(mouse);
+	startButton.Update(mouse);
+	tier1.Update(deltaTime);
+	tier2.Update(deltaTime);
+	tier2CounterBtn.Update(mouse);
 	if (play && !upgradeScreen) {
 		applyButton.Update(mouse);
 		searchButton.Update(mouse);
@@ -188,7 +204,10 @@ void Scene1::Render() {
 	else {
 		if (job.startJob) {
 			StartJob(job.tier);
-			game->getPlayer()->Render(0.20f);
+			if(job.tier == 1)
+				game->getPlayer()->Render(0.20f);
+			if (job.tier == 2)
+				tier2CounterBtn.Draw(renderer);
 		}
 		else {
 			SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
@@ -255,6 +274,29 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						walletText.y = tierText.y + 50;
 						walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					}
+				}
+				if (job.tier == 2) {
+					if (tier2CounterBtn.isSelected) {
+						tier2CounterPlayer++;
+						std::cout << "The Counter Has Increased: " << tier2CounterPlayer << std::endl;
+					}
+				}
+				if (job.tier == 3) {
+					if (tier3.HasIntersection(mouse.rect)) {
+						tier3.clicks++;
+						std::cout << "Tier 3 Clicks: " << tier3.clicks << std::endl;
+					}
+				}
+				if (job.tier == 4) {
+					for (int i = 0; i < tier4Size; i++) {
+						if (tier4[i].HasIntersection(mouse.rect) && tier4[i].asleep) {
+							tier4[i].clicks++;
+							std::cout << "Tier 4 asleep: " << i << "\nClicks: " << tier4[i].clicks << std::endl;
+						}
+					}
+				}
+			}
+	}
 					if (upgradeAccButton.isSelected) 
 						job.UpgradeJobAcc();
 					if (upgradeExpButton.isSelected)
@@ -287,7 +329,8 @@ void Scene1::HandleEvents(const SDL_Event& event)
 
 void Scene1::StartJob(int tier) {
 	game->getPlayer()->tier = job.tier;
-	tier1.SetVelocity(Vec3(1, -10 + (1/(job.experience + 1) * 1.5f), -1));
+	tier1.SetVelocity(Vec3(0, -10 + (1/(job.experience + 1) * 1.5f), -1));
+	tier2.SetVelocity(Vec3(10 + (1 / (job.experience + 1) * 1.5f), 0, -1));
 	switch (tier) {
 	case 1:
 		SDL_RenderCopy(renderer, BackgroundTexture, NULL, NULL);
@@ -313,7 +356,15 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 2:
+		tier2.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+		if (tier2.GetPosition().x >= 25) {
+			count++;
+			tier2Counter++;
+			tier2.SetPosition(Vec3(-1, rand() % 15, 0));
+		}
+		if (tier2Counter == tier2CounterPlayer) {
 
+		}
 		break;
 	case 3:
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
