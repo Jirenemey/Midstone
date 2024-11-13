@@ -264,6 +264,14 @@ void Scene1::HandleEvents(const SDL_Event& event)
 					upgradeScreen = true;
 					walletText.x = backButton.destinationRect.x + 500;
 					walletText.y = backButton.destinationRect.y;
+					if (upgradeAccButton.isSelected)
+						job.UpgradeJobAcc();
+					if (upgradeExpButton.isSelected)
+						job.UpgradeExperience();
+					if (upgradeWageButton.isSelected)
+						job.UpgradeWage();
+					walletText.UpdateText(SetText("Wallet: $", job.wallet));
+					std::cout << "Wallet: " << job.wallet << std::endl;
 				}
 				if (upgradeScreen) {
 					if (backButton.isSelected) {
@@ -275,38 +283,13 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					}
 				}
-				if (job.tier == 2) {
-					if (tier2CounterBtn.isSelected) {
-						tier2CounterPlayer++;
-						std::cout << "The Counter Has Increased: " << tier2CounterPlayer << std::endl;
-					}
-				}
-				if (job.tier == 3) {
-					if (tier3.HasIntersection(mouse.rect)) {
-						tier3.clicks++;
-						std::cout << "Tier 3 Clicks: " << tier3.clicks << std::endl;
-					}
-				}
-				if (job.tier == 4) {
-					for (int i = 0; i < tier4Size; i++) {
-						if (tier4[i].HasIntersection(mouse.rect) && tier4[i].asleep) {
-							tier4[i].clicks++;
-							std::cout << "Tier 4 asleep: " << i << "\nClicks: " << tier4[i].clicks << std::endl;
+				if (job.startJob) {
+					if (job.tier == 2) {
+						if (tier2CounterBtn.isSelected) {
+							tier2CounterPlayer++;
+							std::cout << "The Counter Has Increased: " << tier2CounterPlayer << std::endl;
 						}
 					}
-				}
-			}
-	}
-					if (upgradeAccButton.isSelected) 
-						job.UpgradeJobAcc();
-					if (upgradeExpButton.isSelected)
-						job.UpgradeExperience();
-					if (upgradeWageButton.isSelected)
-						job.UpgradeWage();
-					walletText.UpdateText(SetText("Wallet: $", job.wallet));
-					std::cout << "Wallet: " << job.wallet << std::endl;
-				}
-				if (job.startJob) {
 					if (job.tier == 3) {
 						if (tier3.HasIntersection(mouse.rect)) {
 							tier3.clicks++;
