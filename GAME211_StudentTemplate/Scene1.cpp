@@ -110,11 +110,21 @@ bool Scene1::OnCreate() {
 	// initial spawn
 	tier1.SetPosition(Vec3(10, 10, 0));
 
-	image = IMG_Load("Textures/PurpleBox.png");
+	//tier2 background
+	tier2Background = IMG_Load("Textures/Tier2Background.png");
+	BackgroundTexture2 = SDL_CreateTextureFromSurface(renderer, tier2Background);
+	//tier2 items
+	tier2Assets[0] = "Textures/Box1.png";
+	tier2Assets[1] = "Textures/Box2.png";
+	tier2Assets[2] = "Textures/Box3.png";
+	tier2Assets[3] = "Textures/Box4.png";
+	image = IMG_Load(tier2Assets[rand() % 4]);
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier2.SetImage(image);
 	tier2.SetTexture(texture);
+	// initial spawn
 	tier2.SetPosition(Vec3(1, 10, 0));
+	//tier2 button
 	tier2CounterBtn.sourceRect.y = 000;
 	tier2CounterBtn.destinationRect.x = w - (w * 1 / 2);
 	tier2CounterBtn.destinationRect.y = h - h / 6;
@@ -339,12 +349,17 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 2:
-		tier2.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+		SDL_RenderCopy(renderer, BackgroundTexture2, NULL, NULL);
+		tier2.Draw(renderer, game->getProjectionMatrix(), 4.0f);
 		if (tier2.GetPosition().x >= 25) {
 			count++;
 			std::cout << "The Object Counter Has Increased: " << tier2Counter << std::endl;
 			tier2Counter++;
 			tier2.SetPosition(Vec3(-1, rand() % 15, 0));
+			image = IMG_Load(tier2Assets[rand() % 4]);
+			texture = SDL_CreateTextureFromSurface(renderer, image);
+			tier2.SetImage(image);
+			tier2.SetTexture(texture);
 		}
 		if (tier2Counter == tier2CounterPlayer) {
 
@@ -426,6 +441,9 @@ void Scene1::StartJob(int tier) {
 			tier4[i].SetTexture(texture);
 		}
 
+		//reset the tier2 counters
+		tier2Counter = 0;
+		tier2CounterPlayer = 0;
 
 		// update gui
 		wageText.UpdateText("Wage: $0");

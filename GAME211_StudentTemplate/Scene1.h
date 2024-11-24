@@ -61,9 +61,12 @@ private:
 
 	//tier 2 variables
 	Item tier2;
+	const char* tier2Assets[4];
 	int tier2Counter = 0;
 	int tier2CounterPlayer = 0;
 	Button tier2CounterBtn;
+	SDL_Surface* tier2Background;
+	SDL_Texture* BackgroundTexture2 = SDL_CreateTextureFromSurface(renderer, tier2Background);
 
 	//tier 3 variables
 	People tier3;
