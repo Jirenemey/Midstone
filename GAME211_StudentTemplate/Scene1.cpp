@@ -126,7 +126,7 @@ bool Scene1::OnCreate() {
 	tier2.SetPosition(Vec3(1, 10, 0));
 	//tier2 button
 	tier2CounterBtn.sourceRect.y = 000;
-	tier2CounterBtn.destinationRect.x = w - (w * 1 / 2);
+	tier2CounterBtn.destinationRect.x = w - (w * 1 / 1.5);
 	tier2CounterBtn.destinationRect.y = h - h / 6;
 	tier2CounterBtn.SetTexture(renderer, "Textures/RedButton.png");
 
