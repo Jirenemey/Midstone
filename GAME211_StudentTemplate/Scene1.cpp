@@ -250,13 +250,11 @@ void Scene1::Render() {
 	else {
 		if (job.startJob) {
 			StartJob(job.tier);
-<<<<<<< HEAD
 			if(job.tier == 1)
 				game->getPlayer()->Render(0.20f);
 			if (job.tier == 2)
 				tier2CounterBtn.Draw(renderer);
-=======
->>>>>>> kumanan-branch
+
 		}
 		else {
 			SDL_RenderCopy(renderer, gameBackgroundTexture, NULL, NULL);
@@ -316,7 +314,6 @@ void Scene1::HandleEvents(const SDL_Event& event)
 					upgradeScreen = true;
 					walletText.x = backButton.destinationRect.x + 300;
 					walletText.y = backButton.destinationRect.y;
-<<<<<<< HEAD
 					if (upgradeAccButton.isSelected)
 						job.UpgradeJobAcc();
 					if (upgradeExpButton.isSelected)
@@ -325,9 +322,8 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						job.UpgradeWage();
 					walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					std::cout << "Wallet: " << job.wallet << std::endl;
-=======
 					Mix_PlayChannel(-1, clickSound, 0);
->>>>>>> kumanan-branch
+
 				}
 				if (upgradeScreen) {
 					if (backButton.isSelected) {
@@ -339,8 +335,6 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						walletText.UpdateText(SetText("Wallet: $", job.wallet));
 						Mix_PlayChannel(-1, clickSound, 0);
 					}
-<<<<<<< HEAD
-=======
 					if (upgradeAccButton.isSelected) 
 						job.UpgradeJobAcc();
 					if (upgradeExpButton.isSelected)
@@ -349,7 +343,7 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						job.UpgradeWage();
 					walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					Mix_PlayChannel(-1, clickSound, 0);
->>>>>>> kumanan-branch
+
 				}
 				if (job.startJob) {
 					if (job.tier == 2) {
