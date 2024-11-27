@@ -156,12 +156,16 @@ bool Scene1::OnCreate() {
 	tier2Assets[1] = "Textures/Box2.png";
 	tier2Assets[2] = "Textures/Box3.png";
 	tier2Assets[3] = "Textures/Box4.png";
-	image = IMG_Load(tier2Assets[rand() % 4]);
-	texture = SDL_CreateTextureFromSurface(renderer, image);
-	tier2.SetImage(image);
-	tier2.SetTexture(texture);
-	// initial spawn
-	tier2.SetPosition(Vec3(1, 10, 0));
+	
+	for (int i = 0; i < tier2Size; i++) {
+		image = IMG_Load(tier2Assets[rand() % 4]);
+		texture = SDL_CreateTextureFromSurface(renderer, image);
+		tier2[i].SetImage(image);
+		tier2[i].SetTexture(texture);
+		// initial spawn
+		tier2[i].SetPosition(Vec3(-1, rand() % 15, 0));
+	}
+
 	//tier2 button
 	tier2CounterBtn.sourceRect.y = 000;
 	tier2CounterBtn.destinationRect.x = w - (w * 1 / 1.5);
@@ -199,7 +203,6 @@ void Scene1::Update(const float deltaTime) {
 	searchButton.Update(mouse);
 	startButton.Update(mouse);
 	tier1.Update(deltaTime);
-	tier2.Update(deltaTime);
 	tier2CounterBtn.Update(mouse);
 	if (play && !upgradeScreen) {
 		applyButton.Update(mouse);
@@ -215,6 +218,13 @@ void Scene1::Update(const float deltaTime) {
 	}
 	if(job.tier == 1)
 		tier1.Update(deltaTime);
+
+	if (job.startJob && job.tier == 2) {
+		for (int i = 0; i < tier2Size; i++) {
+				tier2[i].Update(deltaTime);
+		}
+	}
+
 	if (job.startJob && job.tier == 4) {
 		for (int i = 0; i < tier4Size; i++) {
 			if(tier4[i].asleep)
@@ -375,7 +385,9 @@ void Scene1::HandleEvents(const SDL_Event& event)
 void Scene1::StartJob(int tier) {
 	game->getPlayer()->tier = job.tier;
 	tier1.SetVelocity(Vec3(0, -10 + (1/(job.experience + 1) * 1.5f), -1));
-	tier2.SetVelocity(Vec3(10 + (1 / (job.experience + 1) * 1.5f), 0, -1));
+	for (int i = 0; i < tier2Size; i++) {
+		tier2[i].SetVelocity(Vec3(rand() % 20, 0, -1));
+	}
 	switch (tier) {
 	case 1:
 		SDL_RenderCopy(renderer, tier1BackgroundTexture, NULL, NULL);
@@ -405,19 +417,20 @@ void Scene1::StartJob(int tier) {
 		break;
 	case 2:
 		SDL_RenderCopy(renderer, BackgroundTexture2, NULL, NULL);
-		tier2.Draw(renderer, game->getProjectionMatrix(), 4.0f);
-		if (tier2.GetPosition().x >= 25) {
-			count++;
-			std::cout << "The Object Counter Has Increased: " << tier2Counter << std::endl;
-			tier2Counter++;
-			tier2.SetPosition(Vec3(-1, rand() % 15, 0));
-			image = IMG_Load(tier2Assets[rand() % 4]);
-			texture = SDL_CreateTextureFromSurface(renderer, image);
-			tier2.SetImage(image);
-			tier2.SetTexture(texture);
+		for (int i = 0; i < tier2Size; i++) {
+			tier2[i].Draw(renderer, game->getProjectionMatrix(), 4.0f);
+			if (tier2[i].GetPosition().x >= 25) {
+				tier2Counter++;
+				std::cout << "The Object Counter Has Increased: " << tier2Counter << std::endl;
+				tier2[i].SetPosition(Vec3(-1, rand() % 15, 0));
+				image = IMG_Load(tier2Assets[rand() % 4]);
+				texture = SDL_CreateTextureFromSurface(renderer, image);
+				tier2[i].SetImage(image);
+				tier2[i].SetTexture(texture);
+			}
 		}
 		if (tier2Counter == tier2CounterPlayer) {
-
+			//what you win
 		}
 		break;
 	case 3:

@@ -70,7 +70,8 @@ private:
 	Mix_Chunk* tier1Fall;
 
 	//tier 2 variables
-	Item tier2;
+	Item tier2[3];
+	int tier2Size = sizeof(tier2) / sizeof(tier2[0]);
 	const char* tier2Assets[4];
 	int tier2Counter = 0;
 	int tier2CounterPlayer = 0;
