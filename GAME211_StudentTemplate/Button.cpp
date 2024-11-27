@@ -37,3 +37,8 @@ void Button::Update(Mouse &mouse) {
 void Button::Draw(SDL_Renderer* renderer) {
 	SDL_RenderCopy(renderer, texture, &sourceRect, &destinationRect);
 }
+
+void Button::ChangeSize(int x) {
+	destinationRect.w = x;
+	destinationRect.h = x/4;
+}

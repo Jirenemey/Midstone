@@ -4,6 +4,7 @@
 #include <MMath.h>
 #include <sstream>
 #include <string>
+#include <SDL_mixer.h>
 #include "Scene.h"
 #include "Button.h"
 #include "Text.h"
@@ -29,6 +30,10 @@ private:
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
 	bool play = false;
 	SDL_Rect* border;
+	SDL_Surface* menuBackground;
+	SDL_Texture* menuBackgroundTexture;
+	Mix_Music* menuMusic;
+	Mix_Chunk* clickSound;
 
 	//***************GAME SCREEN*****************************//
 	Job job;
@@ -36,6 +41,8 @@ private:
 	Text wageText = Text("Atop.ttf", 50, "Wage: $0");
 	Text walletText = Text("Atop.ttf", 50, "Wallet: $0");
 	Text experienceText = Text("Atop.ttf", 50, "Exp: 0");
+	SDL_Surface* gameBackground;
+	SDL_Texture* gameBackgroundTexture;
 	Button applyButton;
 	Button searchButton;
 	Button startButton;
@@ -53,11 +60,14 @@ private:
 	int count = 0;
 
 	//*******************JOBS********************************//
+	Mix_Chunk* point;
+	
 	// Tier1
 	Item tier1;
 	const char* tier1Assets[4];
 	SDL_Surface* tier1Background;
-	SDL_Texture* BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
+	SDL_Texture* tier1BackgroundTexture;
+	Mix_Chunk* tier1Fall;
 
 	//tier 2 variables
 	Item tier2;
@@ -75,6 +85,7 @@ private:
 	People tier4[6];
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
+	Mix_Chunk* tier4Sleep;
 
 public:
 	// This constructor may be different from what you've seen before

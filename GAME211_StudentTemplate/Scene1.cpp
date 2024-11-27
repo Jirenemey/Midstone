@@ -25,6 +25,35 @@ bool Scene1::OnCreate() {
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
 
+	// Turn on SDL mixer - music stuff
+	Mix_Init(MIX_INIT_MP3);
+
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+
+	menuMusic = Mix_LoadMUS("Sounds/menu.mp3");
+	if (!menuMusic) 
+		std::cout << "Music Error: " << Mix_GetError() << std::endl;
+	
+	clickSound = Mix_LoadWAV("Sounds/button.mp3");
+	if (!clickSound) 
+		std::cout << "Button SFX Error: " << Mix_GetError() << std::endl;
+	
+	//universal win
+	point = Mix_LoadWAV("Sounds/point.mp3");
+	if (!point)
+		std::cout << "Win SFX Error: " << Mix_GetError() << std::endl;
+	//tier1
+	tier1Fall = Mix_LoadWAV("Sounds/tier1fall.mp3");
+	if (!tier1Fall)
+		std::cout << "Tier1 Fall SFX Error: " << Mix_GetError() << std::endl;
+
+	//tier4
+	tier4Sleep = Mix_LoadWAV("Sounds/tier4asleep.mp3");
+	if(!tier4Sleep)
+		std::cout << "Tier4 Asleep SFX Error: " << Mix_GetError() << std::endl;
+
+	Mix_PlayMusic(menuMusic, -1);
+
 	// mouse cursor
 	image = IMG_Load("mouse.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -51,6 +80,7 @@ bool Scene1::OnCreate() {
 	startButton.destinationRect.x = w - (w * 4 / 5);
 	startButton.destinationRect.y = h - h / 4;
 	startButton.SetTexture(renderer, "Textures/buttons2.png");
+
 	// upgrade buttons
 	upgradeScreenButton.sourceRect.y = 000;
 	upgradeScreenButton.destinationRect.x = w - w / 3;
@@ -77,7 +107,7 @@ bool Scene1::OnCreate() {
 	backButton.destinationRect.y = h - (h * 9/10) ;
 	backButton.SetTexture(renderer, "Textures/buttons2.png");
 
-
+	//texts
 	titleText.x = w/4;
 	titleText.y = h/12;
 
@@ -90,9 +120,17 @@ bool Scene1::OnCreate() {
 	border->x = w/2 - border->w/2;
 	border->y = h/2 - border->h/2;
 
+	//menu background
+	menuBackground = IMG_Load("Textures/Menu_background.jpg");
+	menuBackgroundTexture = SDL_CreateTextureFromSurface(renderer, menuBackground);
+
+	//main game background
+	gameBackground = IMG_Load("Textures/Midstone_background.png");
+	gameBackgroundTexture = SDL_CreateTextureFromSurface(renderer, gameBackground);
+
 	// tier1 background
 	tier1Background = IMG_Load("Textures/ShoppingAisle.png");
-	BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
+	tier1BackgroundTexture = SDL_CreateTextureFromSurface(renderer, tier1Background);
 	// tier1 player
 	image = IMG_Load("Textures/ShoppingCart.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -197,14 +235,12 @@ void Scene1::Render() {
 
 	// render the player
 	if (!play) {
-		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-		SDL_RenderFillRect(renderer, border);
+		SDL_RenderCopy(renderer, menuBackgroundTexture, NULL, NULL);
 		playButton.Draw(renderer);
 		titleText.Draw(renderer);
 	}
 	else if (upgradeScreen) {
-		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, gameBackgroundTexture, NULL, NULL);
 		upgradeAccButton.Draw(renderer);
 		upgradeExpButton.Draw(renderer);
 		upgradeWageButton.Draw(renderer);
@@ -214,14 +250,16 @@ void Scene1::Render() {
 	else {
 		if (job.startJob) {
 			StartJob(job.tier);
+<<<<<<< HEAD
 			if(job.tier == 1)
 				game->getPlayer()->Render(0.20f);
 			if (job.tier == 2)
 				tier2CounterBtn.Draw(renderer);
+=======
+>>>>>>> kumanan-branch
 		}
 		else {
-			SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-			SDL_RenderClear(renderer);
+			SDL_RenderCopy(renderer, gameBackgroundTexture, NULL, NULL);
 			searchButton.Draw(renderer);
 			applyButton.Draw(renderer);
 			startButton.Draw(renderer);
@@ -246,12 +284,14 @@ void Scene1::HandleEvents(const SDL_Event& event)
 				if (playButton.isSelected && play == false) {
 					std::cout << "Play button clicked" << std::endl;
 					play = true;
+					Mix_PlayChannel(-1, clickSound, 0);
 				}
-				if (play && !upgradeScreen) {
+				if (play && !upgradeScreen && !job.startJob) {
 					if (searchButton.isSelected) {
 						std::cout << "Search button clicked" << std::endl;
 						// remember to display tier and wage values before being accepted or declined as the console will not be present during gameplay
 						job.Search();
+						Mix_PlayChannel(-1, clickSound, 0);
 					}
 					if (applyButton.isSelected) {
 						std::cout << "Apply button clicked" << std::endl;
@@ -259,6 +299,7 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						if (job.hasJob) {
 							tierText.UpdateText(SetText("Tier: ", job.tier)); // display text
 							wageText.UpdateText(SetText("Wage: $", job.wage));
+							Mix_PlayChannel(-1, clickSound, 0);
 						}
 					}
 					if (startButton.isSelected) {
@@ -266,14 +307,16 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						if (job.hasJob) {
 							job.startJob = true;
 							time = 0;
+							Mix_PlayChannel(-1, clickSound, 0);
 						}
 					}
 				}
-				if (upgradeScreenButton.isSelected && upgradeScreen == false) {
+				if (upgradeScreenButton.isSelected && !upgradeScreen && !job.startJob) {
 					std::cout << "Upgrade button clicked" << std::endl;
 					upgradeScreen = true;
-					walletText.x = backButton.destinationRect.x + 500;
+					walletText.x = backButton.destinationRect.x + 300;
 					walletText.y = backButton.destinationRect.y;
+<<<<<<< HEAD
 					if (upgradeAccButton.isSelected)
 						job.UpgradeJobAcc();
 					if (upgradeExpButton.isSelected)
@@ -282,6 +325,9 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						job.UpgradeWage();
 					walletText.UpdateText(SetText("Wallet: $", job.wallet));
 					std::cout << "Wallet: " << job.wallet << std::endl;
+=======
+					Mix_PlayChannel(-1, clickSound, 0);
+>>>>>>> kumanan-branch
 				}
 				if (upgradeScreen) {
 					if (backButton.isSelected) {
@@ -291,7 +337,19 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						walletText.x = 0;
 						walletText.y = tierText.y + 50;
 						walletText.UpdateText(SetText("Wallet: $", job.wallet));
+						Mix_PlayChannel(-1, clickSound, 0);
 					}
+<<<<<<< HEAD
+=======
+					if (upgradeAccButton.isSelected) 
+						job.UpgradeJobAcc();
+					if (upgradeExpButton.isSelected)
+						job.UpgradeExperience();
+					if (upgradeWageButton.isSelected)
+						job.UpgradeWage();
+					walletText.UpdateText(SetText("Wallet: $", job.wallet));
+					Mix_PlayChannel(-1, clickSound, 0);
+>>>>>>> kumanan-branch
 				}
 				if (job.startJob) {
 					if (job.tier == 2) {
@@ -326,8 +384,9 @@ void Scene1::StartJob(int tier) {
 	tier2.SetVelocity(Vec3(10 + (1 / (job.experience + 1) * 1.5f), 0, -1));
 	switch (tier) {
 	case 1:
-		SDL_RenderCopy(renderer, BackgroundTexture, NULL, NULL);
+		SDL_RenderCopy(renderer, tier1BackgroundTexture, NULL, NULL);
 		tier1.Draw(renderer, game->getProjectionMatrix(), 0.15f);
+		game->getPlayer()->Render(0.20f);
 		if (tier1.GetPosition().y <= 0) {
 			bonus -= 0.1;
 			count++;
@@ -336,6 +395,7 @@ void Scene1::StartJob(int tier) {
 			texture = SDL_CreateTextureFromSurface(renderer, image);
 			tier1.SetImage(image);
 			tier1.SetTexture(texture);
+			Mix_PlayChannel(-1, tier1Fall, 0);
 		}
 		else if (tier1.HasIntersection(game->getPlayer()->square)) {
 			bonus += 0.2;
@@ -346,6 +406,7 @@ void Scene1::StartJob(int tier) {
 			texture = SDL_CreateTextureFromSurface(renderer, image);
 			tier1.SetImage(image);
 			tier1.SetTexture(texture);
+			Mix_PlayChannel(-1, point, 0);
 		}
 		break;
 	case 2:
@@ -384,6 +445,7 @@ void Scene1::StartJob(int tier) {
 			job.experience++;
 			tier3.clicks = 0;
 			time = 0;
+			Mix_PlayChannel(-1, point, 0);
 		}
 		break;
 	case 4:
@@ -395,12 +457,14 @@ void Scene1::StartJob(int tier) {
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
 				tier4[i].SetTexture(texture);
+				Mix_PlayChannel(-1, tier4Sleep, 0);
 			}
 			if (sleepTimer[i] > 5 && tier4[i].asleep) {
 				// if worker is asleep for more than 5 seconds you lose bonus
 				bonus -= 0.1;
 				count++;
 				sleepTimer[i] = 0;
+				Mix_PlayChannel(-1, tier4Sleep, 0);
 			}
 			else if (tier4[i].clicks == 5) {
 				// if worker is asleep and you wake him you get bonus + experience
@@ -415,6 +479,7 @@ void Scene1::StartJob(int tier) {
 				tier4[i].SetTexture(texture);
 				tier4[i].sleepImage = false;
 				tier4[i].asleep = false;
+				Mix_PlayChannel(-1, point, 0);
 			}
 		}
 
@@ -458,6 +523,10 @@ std::string Scene1::SetText(const char* text, float num)
 {
 	// in order to display numbers
 	std::stringstream strm;
-	strm << text << num << std::setprecision(2);
+	if (num >= 1000000)
+		strm << text << num / 1000000 << std::setprecision(2) << " Million";
+	else
+		strm << text << num << std::setprecision(2);
+
 	return strm.str().c_str();
 }

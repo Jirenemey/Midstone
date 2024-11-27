@@ -132,6 +132,7 @@ void Job::UpgradeJobAcc() {
 	}
 	else {
 		std::cout << "Insufficient funds for HIRE CHANCE UPGRADE." << std::endl;
+		std::cout << "Current cost: " << price << std::endl;
 	}
 }
 
@@ -145,6 +146,7 @@ void Job::UpgradeWage() {
 	}
 	else {
 		std::cout << "Insufficient funds for WAGE UPGRADE." << std::endl;
+		std::cout << "Current cost: " << price << std::endl;
 	}
 }
 
@@ -158,5 +160,6 @@ void Job::UpgradeExperience() {
 	}
 	else {
 		std::cout << "Insufficient funds for EXP UPGRADE." << std::endl;
+		std::cout << "Current cost: " << price << std::endl;
 	}
 }
