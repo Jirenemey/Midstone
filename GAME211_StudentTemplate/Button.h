@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include "Mouse.h"
 
 class Button {
@@ -17,6 +18,7 @@ public:
 
 	void Update(Mouse& mouse);
 	void Draw(SDL_Renderer* renderer);
+	void ChangeSize(int x);
 
 };
 
