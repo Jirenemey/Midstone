@@ -81,6 +81,8 @@ private:
 
 	//tier 3 variables
 	People tier3;
+	SDL_Surface* tier3Background;
+	SDL_Texture* BackgroundTexture3 = SDL_CreateTextureFromSurface(renderer, tier3Background);
 
 	// Tier4
 	People tier4[6];
