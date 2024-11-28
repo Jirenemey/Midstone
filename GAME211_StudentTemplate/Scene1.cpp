@@ -180,7 +180,7 @@ bool Scene1::OnCreate() {
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier3.SetImage(image);
 	tier3.SetTexture(texture);
-	tier3.SetPosition(Vec3(10, 10, 0));
+	tier3.SetPosition(Vec3(-1, rand() % 15, 0));
 
 	for (int i = 0; i < tier4Size; i++) {
 		tier4[i].SetImage(image);
