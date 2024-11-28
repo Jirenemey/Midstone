@@ -62,8 +62,9 @@ bool Scene1::OnCreate() {
 	// setting all buttons with images and location on screen
 	// start menu button
 	playButton.sourceRect.y = 600;
-	playButton.destinationRect.x = w/2 - playButton.sourceRect.w/2;
-	playButton.destinationRect.y = h/2 - playButton.sourceRect.h/2;
+	playButton.ChangeSize(500);
+	playButton.destinationRect.x = w/2 - playButton.destinationRect.w/2;
+	playButton.destinationRect.y = h/2 - playButton.destinationRect.h/2;
 	playButton.SetTexture(renderer, "Textures/buttons2.png");
 	// main game buttons
 	applyButton.sourceRect.y = 100;
@@ -108,17 +109,15 @@ bool Scene1::OnCreate() {
 	backButton.SetTexture(renderer, "Textures/buttons2.png");
 
 	//texts
-	titleText.x = w/4;
+	titleText.x = w/3;
 	titleText.y = h/12;
 
 	tierText.y = h/12;
 	walletText.y = h/12 + 50;
 	experienceText.y = h/12 + 100;
-	border = new SDL_Rect();
-	border->w = w - w/15;
-	border->h = h - h/15;
-	border->x = w/2 - border->w/2;
-	border->y = h/2 - border->h/2;
+
+	searchInfoText.x = w / 3;
+	searchInfoText.y = h / 12;
 
 	//menu background
 	menuBackground = IMG_Load("Textures/Menu_background.jpg");
@@ -276,6 +275,7 @@ void Scene1::Render() {
 			tierText.Draw(renderer);
 			walletText.Draw(renderer);
 			experienceText.Draw(renderer);
+			searchInfoText.Draw(renderer);
 		}
 	}
 	mouse.Draw(renderer);
@@ -430,8 +430,19 @@ void Scene1::StartJob(int tier) {
 			}
 		}
 		if (tier2Counter == tier2CounterPlayer) {
-			//what you win
+			bonus = 3;
+			job.experience += 10;
 		}
+		else if (tier2Counter > tier2CounterPlayer && tier2Counter < tier2CounterPlayer + 5) {
+			bonus = 1.5;
+			job.experience += 5;
+		}
+		else if (tier2Counter < tier2CounterPlayer && tier2Counter > tier2CounterPlayer - 5) {
+			bonus = 1.5;
+			job.experience += 5;
+		}
+		else
+			bonus = 0.5;
 		break;
 	case 3:
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);

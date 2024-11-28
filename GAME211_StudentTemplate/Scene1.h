@@ -29,7 +29,6 @@ private:
 	Button playButton;
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
 	bool play = false;
-	SDL_Rect* border;
 	SDL_Surface* menuBackground;
 	SDL_Texture* menuBackgroundTexture;
 	Mix_Music* menuMusic;
@@ -37,10 +36,11 @@ private:
 
 	//***************GAME SCREEN*****************************//
 	Job job;
-	Text tierText = Text("Atop.ttf", 50, "Tier: N/A");
-	Text wageText = Text("Atop.ttf", 50, "Wage: $0");
-	Text walletText = Text("Atop.ttf", 50, "Wallet: $0");
-	Text experienceText = Text("Atop.ttf", 50, "Exp: 0");
+	Text tierText = Text("Atop.ttf", 40, "Tier: N/A");
+	Text wageText = Text("Atop.ttf", 40, "Wage: $0");
+	Text searchInfoText = Text("Atop.ttf", 40, "Job Found: \nTier: \nWage: ");
+	Text walletText = Text("Atop.ttf", 40, "Wallet: $0");
+	Text experienceText = Text("Atop.ttf", 40, "Exp: 0");
 	SDL_Surface* gameBackground;
 	SDL_Texture* gameBackgroundTexture;
 	Button applyButton;
