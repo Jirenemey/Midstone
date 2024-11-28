@@ -68,56 +68,78 @@ bool Scene1::OnCreate() {
 	playButton.SetTexture(renderer, "Textures/buttons2.png");
 	// main game buttons
 	applyButton.sourceRect.y = 100;
-	applyButton.destinationRect.x = w - w/3;
-	applyButton.destinationRect.y = h - h/4;
+	applyButton.ChangeSize(200);
+	applyButton.destinationRect.x = w * 0.63;
+	applyButton.destinationRect.y = h/12 + 175;
 	applyButton.SetTexture(renderer, "Textures/buttons2.png");
 
 	searchButton.sourceRect.y = 400;
-	searchButton.destinationRect.x = w - w/3;
-	searchButton.destinationRect.y = h - (h * 3/7);
+	searchButton.ChangeSize(200);
+	searchButton.destinationRect.x = w * 0.63;
+	searchButton.destinationRect.y = h/12 + 100;
 	searchButton.SetTexture(renderer, "Textures/buttons2.png");
 
 	startButton.sourceRect.y = 000;
-	startButton.destinationRect.x = w - (w * 4 / 5);
-	startButton.destinationRect.y = h - h / 4;
+	startButton.ChangeSize(200);
+	startButton.destinationRect.x = w * 0.3;
+	startButton.destinationRect.y = h/12 + 275;
 	startButton.SetTexture(renderer, "Textures/buttons2.png");
 
 	// upgrade buttons
 	upgradeScreenButton.sourceRect.y = 000;
-	upgradeScreenButton.destinationRect.x = w - w / 3;
-	upgradeScreenButton.destinationRect.y = h - h/ 2;
+	upgradeScreenButton.ChangeSize(200);
+	upgradeScreenButton.destinationRect.x = w * 0.63;
+	upgradeScreenButton.destinationRect.y = h/12 + 250;
 	upgradeScreenButton.SetTexture(renderer, "Textures/buttons3.png");
 
 	upgradeAccButton.sourceRect.y = 300;
-	upgradeAccButton.destinationRect.x = w - (w * 0.95);
-	upgradeAccButton.destinationRect.y = h - h / 2;
+	upgradeAccButton.ChangeSize(200);
+	upgradeAccButton.destinationRect.x = w * 0.3;
+	upgradeAccButton.destinationRect.y = h/12 + 75;
 	upgradeAccButton.SetTexture(renderer, "Textures/buttons3.png");
 
 	upgradeWageButton.sourceRect.y = 100;
-	upgradeWageButton.destinationRect.x = w - (w * 0.95) + 300;
-	upgradeWageButton.destinationRect.y = h - h / 2;
+	upgradeWageButton.ChangeSize(200);
+	upgradeWageButton.destinationRect.x = w * 0.3;
+	upgradeWageButton.destinationRect.y = h/12 + 175;
 	upgradeWageButton.SetTexture(renderer, "Textures/buttons3.png");
 
 	upgradeExpButton.sourceRect.y = 200;
-	upgradeExpButton.destinationRect.x = w - (w * 0.95) + 600;
-	upgradeExpButton.destinationRect.y = h - h / 2;
+	upgradeExpButton.ChangeSize(200);
+	upgradeExpButton.destinationRect.x = w * 0.3;
+	upgradeExpButton.destinationRect.y = h/12 + 275;
 	upgradeExpButton.SetTexture(renderer, "Textures/buttons3.png");
 
 	backButton.sourceRect.y = 200;
-	backButton.destinationRect.x = 0;
-	backButton.destinationRect.y = h - (h * 9/10) ;
+	backButton.ChangeSize(200);
+	backButton.destinationRect.x = w * 0.06;
+	backButton.destinationRect.y = h/12 + 50;
 	backButton.SetTexture(renderer, "Textures/buttons2.png");
 
-	//texts
+	// TEXTS
+	// menu
 	titleText.x = w/3;
 	titleText.y = h/12;
+	// left computer screen
+	jobInfoText.x = w/5;
+	jobInfoText.y = h/12 + 50;
+	wageText.x = w/10;
+	wageText.y = h/12 + 125;
+	tierText.x = w/10;
+	tierText.y = h/12 + 175;
+	walletText.x = w/10;
+	walletText.y = h/12 + 225;
+	experienceText.x = w/10;
+	experienceText.y = h/12 + 275;
+	
+	//right computer screen
+	searchInfoText.x = w/2;
+	searchInfoText.y = h / 12 + 50;
+	searchTierText.x = w * 0.475;
+	searchTierText.y = h / 12 + 125;
+	searchWageText.x = w * 0.475;
+	searchWageText.y = h / 12 + 175;
 
-	tierText.y = h/12;
-	walletText.y = h/12 + 50;
-	experienceText.y = h/12 + 100;
-
-	searchInfoText.x = w / 3;
-	searchInfoText.y = h / 12;
 
 	//menu background
 	menuBackground = IMG_Load("Textures/Menu_background.jpg");
@@ -271,11 +293,14 @@ void Scene1::Render() {
 			applyButton.Draw(renderer);
 			startButton.Draw(renderer);
 			upgradeScreenButton.Draw(renderer);
+			jobInfoText.Draw(renderer);
 			wageText.Draw(renderer);
 			tierText.Draw(renderer);
 			walletText.Draw(renderer);
 			experienceText.Draw(renderer);
 			searchInfoText.Draw(renderer);
+			searchTierText.Draw(renderer);
+			searchWageText.Draw(renderer);
 		}
 	}
 	mouse.Draw(renderer);
@@ -300,6 +325,8 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						// remember to display tier and wage values before being accepted or declined as the console will not be present during gameplay
 						job.Search();
 						Mix_PlayChannel(-1, clickSound, 0);
+						searchTierText.UpdateText(SetText("Tier: ", job.tier));
+						searchWageText.UpdateText(SetText("Wage: ", job.wage));
 					}
 					if (applyButton.isSelected) {
 						std::cout << "Apply button clicked" << std::endl;
@@ -322,8 +349,8 @@ void Scene1::HandleEvents(const SDL_Event& event)
 				if (upgradeScreenButton.isSelected && !upgradeScreen && !job.startJob) {
 					std::cout << "Upgrade button clicked" << std::endl;
 					upgradeScreen = true;
-					walletText.x = backButton.destinationRect.x + 300;
-					walletText.y = backButton.destinationRect.y;
+					walletText.x = backButton.destinationRect.x + 60;
+					walletText.y = backButton.destinationRect.y + 150;
 					if (upgradeAccButton.isSelected)
 						job.UpgradeJobAcc();
 					if (upgradeExpButton.isSelected)
@@ -340,7 +367,7 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						std::cout << "Back button clicked" << std::endl;
 						upgradeScreen = false;
 						backButton.isSelected = false;
-						walletText.x = 0;
+						walletText.x = tierText.x;
 						walletText.y = tierText.y + 50;
 						walletText.UpdateText(SetText("Wallet: $", job.wallet));
 						Mix_PlayChannel(-1, clickSound, 0);

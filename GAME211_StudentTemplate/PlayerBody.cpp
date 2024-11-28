@@ -58,24 +58,23 @@ void PlayerBody::HandleEvents( const SDL_Event& event )
     if (tier == 1) {
         switch (event.type) {
         case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_a) {
+            if (event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_LEFT) {
                 std::cout << "A button pressed" << std::endl;
                 this->vel.x = -10;
             }
-            if (event.key.keysym.sym == SDLK_d){
+            if (event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_RIGHT) {
                 std::cout << "D button pressed" << std::endl;
                 this->vel.x = 10;
             }
             break;
-        case SDL_KEYUP:
-            if (event.key.keysym.sym == SDLK_a) {
+        case SDL_KEYUP:/*
+            if (event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_LEFT) {
                 std::cout << "A button released" << std::endl;
                 this->vel.x = 0;
-            }
-            if (event.key.keysym.sym == SDLK_d) {
+            }if (event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_RIGHT) {
                 std::cout << "D button released" << std::endl;
                 this->vel.x = 0;
-            }
+            }*/
         }
     }
 }

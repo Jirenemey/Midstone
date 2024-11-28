@@ -36,9 +36,12 @@ private:
 
 	//***************GAME SCREEN*****************************//
 	Job job;
+	Text jobInfoText = Text("Atop.ttf", 50, "Job Info");
 	Text tierText = Text("Atop.ttf", 40, "Tier: N/A");
 	Text wageText = Text("Atop.ttf", 40, "Wage: $0");
-	Text searchInfoText = Text("Atop.ttf", 40, "Job Found: \nTier: \nWage: ");
+	Text searchInfoText = Text("Atop.ttf", 50, "Job Found");
+	Text searchTierText = Text("Atop.ttf", 40, "Tier: ");
+	Text searchWageText = Text("Atop.ttf", 40, "Wage: ");
 	Text walletText = Text("Atop.ttf", 40, "Wallet: $0");
 	Text experienceText = Text("Atop.ttf", 40, "Exp: 0");
 	SDL_Surface* gameBackground;
