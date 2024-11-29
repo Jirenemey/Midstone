@@ -13,9 +13,12 @@ public:
 	bool applied = true;
 	bool startJob = false;
 
-	int wageUpgradeLevel = 0;
-	int jobAccChanceLevel = 0;
-	int experienceLevel = 0;
+	int wageUpgradeLevel = 1;
+	int wageUpgradePrice = pow(wageUpgradeLevel, 3.1) * 70;
+	int jobAccChanceLevel = 1;
+	int jobAccChancePrice = pow(jobAccChanceLevel, 4.7) * 25;
+	int experienceLevel = 1;
+	int experiencePrice = pow(experienceLevel, 4.2) * 40;
 
 	void Search();				// search for job
 	void Apply();				// apply for job

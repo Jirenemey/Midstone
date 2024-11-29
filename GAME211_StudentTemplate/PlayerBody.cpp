@@ -75,6 +75,7 @@ void PlayerBody::HandleEvents( const SDL_Event& event )
                 std::cout << "D button released" << std::endl;
                 this->vel.x = 0;
             }*/
+            break;
         }
     }
 }

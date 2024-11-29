@@ -140,6 +140,15 @@ bool Scene1::OnCreate() {
 	searchWageText.x = w * 0.475;
 	searchWageText.y = h / 12 + 175;
 
+	//upgrade screen texts - right computer
+	upgradePrice.x = w * 0.475;
+	upgradePrice.y = h / 12 + 75;
+	upgradeLevel.x = w * 0.475;
+	upgradeLevel.y = h / 12 + 175;
+	upgradeDesc.x = w * 0.475;
+	upgradeDesc.y = h / 12 + 275;
+
+
 
 	//menu background
 	menuBackground = IMG_Load("Textures/Menu_background.jpg");
@@ -277,6 +286,10 @@ void Scene1::Render() {
 		upgradeWageButton.Draw(renderer);
 		backButton.Draw(renderer);
 		walletText.Draw(renderer);
+		upgradePrice.Draw(renderer);
+		upgradeLevel.Draw(renderer);
+		if (upgradeAccButton.isSelected || upgradeExpButton.isSelected || upgradeWageButton.isSelected)
+			upgradeDesc.Draw(renderer);
 	}
 	else {
 		if (job.startJob) {
@@ -372,6 +385,7 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						walletText.UpdateText(SetText("Wallet: $", job.wallet));
 						Mix_PlayChannel(-1, clickSound, 0);
 					}
+
 					if (upgradeAccButton.isSelected) 
 						job.UpgradeJobAcc();
 					if (upgradeExpButton.isSelected)
@@ -405,6 +419,24 @@ void Scene1::HandleEvents(const SDL_Event& event)
 					}
 				}
 			}
+			break;
+		case SDL_MOUSEMOTION:
+			if (upgradeAccButton.isSelected) {
+				upgradeDesc.UpdateText("Increases job acceptance chance.");
+				upgradePrice.UpdateText(SetText("Price: ", job.jobAccChancePrice));
+				upgradeLevel.UpdateText(SetText("Level: ", job.jobAccChanceLevel));
+			}
+			if (upgradeExpButton.isSelected) {
+				upgradeDesc.UpdateText("Increases job experience.");
+				upgradePrice.UpdateText(SetText("Price: ", job.experiencePrice));
+				upgradeLevel.UpdateText(SetText("Level: ", job.experienceLevel));
+			}
+			if (upgradeWageButton.isSelected) {
+				upgradeDesc.UpdateText("Increases job wage multi.");
+				upgradePrice.UpdateText(SetText("Price: ", job.wageUpgradePrice));
+				upgradeLevel.UpdateText(SetText("Level: ", job.wageUpgradeLevel));
+			}
+			break;
 	}
 
 }
@@ -456,20 +488,22 @@ void Scene1::StartJob(int tier) {
 				tier2[i].SetTexture(texture);
 			}
 		}
-		if (tier2Counter == tier2CounterPlayer) {
-			bonus = 3;
-			job.experience += 10;
+		if(time >= 30){
+			if (tier2Counter == tier2CounterPlayer) {
+				bonus = 3;
+				job.experience += 10;
+			}
+			else if (tier2Counter > tier2CounterPlayer && tier2Counter < tier2CounterPlayer + 5) {
+				bonus = 1.5;
+				job.experience += 5;
+			}
+			else if (tier2Counter < tier2CounterPlayer && tier2Counter > tier2CounterPlayer - 5) {
+				bonus = 1.5;
+				job.experience += 5;
+			}
+			else
+				bonus = 0.5;
 		}
-		else if (tier2Counter > tier2CounterPlayer && tier2Counter < tier2CounterPlayer + 5) {
-			bonus = 1.5;
-			job.experience += 5;
-		}
-		else if (tier2Counter < tier2CounterPlayer && tier2Counter > tier2CounterPlayer - 5) {
-			bonus = 1.5;
-			job.experience += 5;
-		}
-		else
-			bonus = 0.5;
 		break;
 	case 3:
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
@@ -527,10 +561,6 @@ void Scene1::StartJob(int tier) {
 				Mix_PlayChannel(-1, point, 0);
 			}
 		}
-
-		break;
-	case 5:
-
 		break;
 	}
 	if (count == 10 || time >= 30) {
@@ -569,7 +599,7 @@ std::string Scene1::SetText(const char* text, float num)
 	// in order to display numbers
 	std::stringstream strm;
 	if (num >= 1000000)
-		strm << text << num / 1000000 << std::setprecision(2) << " Million";
+		strm << text << num / 1000000 << std::setprecision(2) << " M";
 	else
 		strm << text << num << std::setprecision(2);
 

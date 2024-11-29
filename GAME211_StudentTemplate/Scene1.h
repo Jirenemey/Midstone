@@ -58,6 +58,10 @@ private:
 	Button upgradeWageButton;
 	Button upgradeExpButton;
 	Button upgradeAccButton;
+	// display upgrade info
+	Text upgradePrice = Text("Atop.ttf", 40, "Price: ");
+	Text upgradeLevel = Text("Atop.ttf", 40, "Level: ");
+	Text upgradeDesc = Text("Atop.ttf", 25, "Desc: ");
 	float time = 0;
 	float bonus = 1;
 	int count = 0;
