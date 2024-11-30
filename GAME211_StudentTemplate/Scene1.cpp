@@ -214,6 +214,12 @@ bool Scene1::OnCreate() {
 	tier2CounterBtn.destinationRect.y = h - h / 6;
 	tier2CounterBtn.SetTexture(renderer, "Textures/RedButton.png");
 
+	//tier3 background
+	tier3Background = IMG_Load("Textures/Tier3Background.png");
+	BackgroundTexture3 = SDL_CreateTextureFromSurface(renderer, tier3Background);
+	//tier3 item
+	image = IMG_Load("Textures/Tier3ShadowLeft.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier3.SetImage(image);
 	tier3.SetTexture(texture);
 	tier3.SetPosition(Vec3(10, 10, 0));
@@ -519,17 +525,22 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 3:
+<<<<<<< HEAD
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
 		tier3Clicks = 10 - (job.experience / 25);
 		if (tier3Clicks < 1)
 			tier3Clicks = 1;
+=======
+		SDL_RenderCopy(renderer, BackgroundTexture3, NULL, NULL);
+		tier3.Draw(renderer, game->getProjectionMatrix(), 5.0f);
+>>>>>>> josh-branch
 		if (time > 5) {
 			// if robber is in store for more than 5 seconds you lose bonus
 			// and you lose 2% of your wallet (got robbed)
 			job.wallet -= job.wallet * (0.02f);
 			bonus -= 0.1;
 			count++;
-			tier3.SetPosition(Vec3(rand() % 20, 10, 0));
+			tier3.SetPosition(Vec3(rand() % 20, 5, 0));
 			tier3.clicks = 0;
 			time = 0;
 			Mix_PlayChannel(-1, tier3Steal, 0);
@@ -537,7 +548,7 @@ void Scene1::StartJob(int tier) {
 		else if (tier3.clicks >= tier3Clicks) {
 			bonus += 0.2;
 			count++;
-			tier3.SetPosition(Vec3(rand() % 20, 10, 0));
+			tier3.SetPosition(Vec3(rand() % 20, 5, 0));
 			job.experience++;
 			tier3.clicks = 0;
 			time = 0;
