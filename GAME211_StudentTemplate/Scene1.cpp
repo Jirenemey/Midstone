@@ -47,6 +47,16 @@ bool Scene1::OnCreate() {
 	if (!tier1Fall)
 		std::cout << "Tier1 Fall SFX Error: " << Mix_GetError() << std::endl;
 
+	//tier2
+	tier2Click = Mix_LoadWAV("Sounds/tier2click.mp3");
+	if (!tier2Click)
+		std::cout << "Tier2 Click SFX Error: " << Mix_GetError() << std::endl;
+
+	//tier3
+	tier3Steal = Mix_LoadWAV("Sounds/tier3steal.mp3");
+	if (!tier3Steal)
+		std::cout << "Tier3 Steal SFX Error: " << Mix_GetError() << std::endl;
+
 	//tier4
 	tier4Sleep = Mix_LoadWAV("Sounds/tier4asleep.mp3");
 	if(!tier4Sleep)
@@ -175,8 +185,9 @@ bool Scene1::OnCreate() {
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier1.SetImage(image);
 	tier1.SetTexture(texture);
-	// initial spawn
+	// initial spawn & vel
 	tier1.SetPosition(Vec3(10, 10, 0));
+	tier1.SetVelocity(Vec3(0, -10 + (1 / (job.experience + 1) * 1.5f), -1));
 
 	//tier2 background
 	tier2Background = IMG_Load("Textures/Tier2Background.png");
@@ -192,8 +203,9 @@ bool Scene1::OnCreate() {
 		texture = SDL_CreateTextureFromSurface(renderer, image);
 		tier2[i].SetImage(image);
 		tier2[i].SetTexture(texture);
-		// initial spawn
+		// initial spawn & vel
 		tier2[i].SetPosition(Vec3(-1, rand() % 15, 0));
+		tier2[i].SetVelocity(Vec3(rand() % 10 + (10 / (job.experience + 1)), 0, -1));
 	}
 
 	//tier2 button
@@ -401,6 +413,7 @@ void Scene1::HandleEvents(const SDL_Event& event)
 						if (tier2CounterBtn.isSelected) {
 							tier2CounterPlayer++;
 							std::cout << "The Counter Has Increased: " << tier2CounterPlayer << std::endl;
+							Mix_PlayChannel(-1, tier2Click, 0);
 						}
 					}
 					if (job.tier == 3) {
@@ -443,10 +456,6 @@ void Scene1::HandleEvents(const SDL_Event& event)
 
 void Scene1::StartJob(int tier) {
 	game->getPlayer()->tier = job.tier;
-	tier1.SetVelocity(Vec3(0, -10 + (1/(job.experience + 1) * 1.5f), -1));
-	for (int i = 0; i < tier2Size; i++) {
-		tier2[i].SetVelocity(Vec3(rand() % 20, 0, -1));
-	}
 	switch (tier) {
 	case 1:
 		SDL_RenderCopy(renderer, tier1BackgroundTexture, NULL, NULL);
@@ -460,6 +469,7 @@ void Scene1::StartJob(int tier) {
 			texture = SDL_CreateTextureFromSurface(renderer, image);
 			tier1.SetImage(image);
 			tier1.SetTexture(texture);
+			tier1.SetVelocity(Vec3(0, -10 + (1 / (job.experience + 1) * 1.5f), -1));
 			Mix_PlayChannel(-1, tier1Fall, 0);
 		}
 		else if (tier1.HasIntersection(game->getPlayer()->square)) {
@@ -471,21 +481,24 @@ void Scene1::StartJob(int tier) {
 			texture = SDL_CreateTextureFromSurface(renderer, image);
 			tier1.SetImage(image);
 			tier1.SetTexture(texture);
+			tier1.SetVelocity(Vec3(0, -10 + (1 / (job.experience + 1) * 1.5f), -1));
 			Mix_PlayChannel(-1, point, 0);
 		}
 		break;
 	case 2:
 		SDL_RenderCopy(renderer, BackgroundTexture2, NULL, NULL);
-		for (int i = 0; i < tier2Size; i++) {
+		for (int i = 0; i < tier2Size; i++){
 			tier2[i].Draw(renderer, game->getProjectionMatrix(), 4.0f);
-			if (tier2[i].GetPosition().x >= 25) {
+			if (tier2[i].GetPosition().x >= 25 && time <= 25) {
 				tier2Counter++;
 				std::cout << "The Object Counter Has Increased: " << tier2Counter << std::endl;
-				tier2[i].SetPosition(Vec3(-1, rand() % 15, 0));
+				tier2[i].SetPosition(Vec3(-1, rand() % 10 + 5, 0));
 				image = IMG_Load(tier2Assets[rand() % 4]);
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier2[i].SetImage(image);
 				tier2[i].SetTexture(texture);
+				tier2[i].SetVelocity(Vec3(rand() % 10 + (10 / (job.experience + 1) * 1.5f), 0, -1));
+				Mix_PlayChannel(-1, point, 0);
 			}
 		}
 		if(time >= 30){
@@ -507,6 +520,9 @@ void Scene1::StartJob(int tier) {
 		break;
 	case 3:
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+		tier3Clicks = 10 - (job.experience / 25);
+		if (tier3Clicks < 1)
+			tier3Clicks = 1;
 		if (time > 5) {
 			// if robber is in store for more than 5 seconds you lose bonus
 			// and you lose 2% of your wallet (got robbed)
@@ -516,8 +532,9 @@ void Scene1::StartJob(int tier) {
 			tier3.SetPosition(Vec3(rand() % 20, 10, 0));
 			tier3.clicks = 0;
 			time = 0;
+			Mix_PlayChannel(-1, tier3Steal, 0);
 		}
-		else if (tier3.clicks == 10) {
+		else if (tier3.clicks >= tier3Clicks) {
 			bonus += 0.2;
 			count++;
 			tier3.SetPosition(Vec3(rand() % 20, 10, 0));
@@ -530,6 +547,9 @@ void Scene1::StartJob(int tier) {
 	case 4:
 		for (int i = 0; i < tier4Size; i++) {
 			tier4[i].Draw(renderer, game->getProjectionMatrix(), 0.10f);
+			tier4Clicks = 7 - (job.experience / 50);
+			if (tier4Clicks < 1)
+				tier4Clicks = 1;
 			if (sleepTimer[i] > 0 && !tier4[i].sleepImage) {
 				tier4[i].sleepImage = true;
 				image = IMG_Load("Textures/Blinky.png");
@@ -545,7 +565,7 @@ void Scene1::StartJob(int tier) {
 				sleepTimer[i] = 0;
 				Mix_PlayChannel(-1, tier4Sleep, 0);
 			}
-			else if (tier4[i].clicks == 5) {
+			else if (tier4[i].clicks >= tier4Clicks) {
 				// if worker is asleep and you wake him you get bonus + experience
 				bonus += 0.2;
 				count++;

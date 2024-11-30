@@ -85,15 +85,19 @@ private:
 	Button tier2CounterBtn;
 	SDL_Surface* tier2Background;
 	SDL_Texture* BackgroundTexture2 = SDL_CreateTextureFromSurface(renderer, tier2Background);
+	Mix_Chunk* tier2Click;
 
 	//tier 3 variables
 	People tier3;
+	Mix_Chunk* tier3Steal;
+	int tier3Clicks = 10;
 
 	// Tier4
 	People tier4[6];
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
 	Mix_Chunk* tier4Sleep;
+	int tier4Clicks = 7;
 
 public:
 	// This constructor may be different from what you've seen before
