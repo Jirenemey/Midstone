@@ -440,10 +440,13 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 3:
+<<<<<<< HEAD
+=======
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
 		tier3Clicks = 10 - (job.experience / 25);
 		if (tier3Clicks < 1)
 			tier3Clicks = 1;
+>>>>>>> kumanan-branch
 		SDL_RenderCopy(renderer, BackgroundTexture3, NULL, NULL);
 		tier3.Draw(renderer, game->getProjectionMatrix(), 5.0f);
 		if (time > 5) {
