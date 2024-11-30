@@ -81,6 +81,8 @@ private:
 
 	//tier 3 variables
 	People tier3;
+	Mix_Chunk* tier3Steal;
+	int tier3Clicks = 10;
 	SDL_Surface* tier3Background;
 	SDL_Texture* BackgroundTexture3 = SDL_CreateTextureFromSurface(renderer, tier3Background);
 
