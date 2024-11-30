@@ -222,7 +222,7 @@ bool Scene1::OnCreate() {
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier3.SetImage(image);
 	tier3.SetTexture(texture);
-	tier3.SetPosition(Vec3(10, 10, 0));
+	tier3.SetPosition(Vec3(10, 5, 0));
 
 	for (int i = 0; i < tier4Size; i++) {
 		tier4[i].SetImage(image);
@@ -246,12 +246,8 @@ void Scene1::Update(const float deltaTime) {
 	// Update player
 	game->getPlayer()->Update(deltaTime);
 	mouse.Update();
-	playButton.Update(mouse);
-	applyButton.Update(mouse);
-	searchButton.Update(mouse);
-	startButton.Update(mouse);
-	tier1.Update(deltaTime);
-	tier2CounterBtn.Update(mouse);
+	if(!play)
+		playButton.Update(mouse);
 	if (play && !upgradeScreen) {
 		applyButton.Update(mouse);
 		searchButton.Update(mouse);
@@ -268,6 +264,7 @@ void Scene1::Update(const float deltaTime) {
 		tier1.Update(deltaTime);
 
 	if (job.startJob && job.tier == 2) {
+		tier2CounterBtn.Update(mouse);
 		for (int i = 0; i < tier2Size; i++) {
 				tier2[i].Update(deltaTime);
 		}
@@ -527,11 +524,12 @@ void Scene1::StartJob(int tier) {
 	case 3:
 		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
 		tier3Clicks = 10 - (job.experience / 25);
+		tier3Time = 2 + (job.experience / 25);
 		if (tier3Clicks < 1)
 			tier3Clicks = 1;
 		SDL_RenderCopy(renderer, BackgroundTexture3, NULL, NULL);
 		tier3.Draw(renderer, game->getProjectionMatrix(), 5.0f);
-		if (time > 5) {
+		if (time > tier3Time) {
 			// if robber is in store for more than 5 seconds you lose bonus
 			// and you lose 2% of your wallet (got robbed)
 			job.wallet -= job.wallet * (0.02f);
@@ -545,7 +543,7 @@ void Scene1::StartJob(int tier) {
 		else if (tier3.clicks >= tier3Clicks) {
 			bonus += 0.2;
 			count++;
-			tier3.SetPosition(Vec3(rand() % 20, 5, 0));
+			tier3.SetPosition(Vec3(rand() % 15 + 5, 5, 0));
 			job.experience++;
 			tier3.clicks = 0;
 			time = 0;
