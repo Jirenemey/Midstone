@@ -224,11 +224,20 @@ bool Scene1::OnCreate() {
 	tier3.SetTexture(texture);
 	tier3.SetPosition(Vec3(10, 5, 0));
 
+	//tier4 item
+	image = IMG_Load("Textures/NoImage.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 	for (int i = 0; i < tier4Size; i++) {
 		tier4[i].SetImage(image);
 		tier4[i].SetTexture(texture);
 		tier4[i].SetPosition(Vec3(rand() % 20 + 5, rand() % 20 + 5, 0));
 	}
+	tier4[0].SetPosition(Vec3(11, 9.85, 0));
+	tier4[1].SetPosition(Vec3(5.2, 7.9, 0));
+	tier4[2].SetPosition(Vec3(16.8, 11.9, 0));
+	tier4[3].SetPosition(Vec3(19.2, 7.1, 0));
+	tier4[4].SetPosition(Vec3(13.4, 5.1, 0));
+	tier4[5].SetPosition(Vec3(2.8, 12.6, 0));
 
 	game->getPlayer()->setPos(Vec3(10, 1, 0));
 
@@ -556,9 +565,10 @@ void Scene1::StartJob(int tier) {
 			tier4Clicks = 7 - (job.experience / 50);
 			if (tier4Clicks < 1)
 				tier4Clicks = 1;
+			tier4[i].Draw(renderer, game->getProjectionMatrix(), 4.0f);
 			if (sleepTimer[i] > 0 && !tier4[i].sleepImage) {
 				tier4[i].sleepImage = true;
-				image = IMG_Load("Textures/Blinky.png");
+				image = IMG_Load("Textures/Tier4Asleep.png");
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
 				tier4[i].SetTexture(texture);
@@ -578,7 +588,7 @@ void Scene1::StartJob(int tier) {
 				job.experience++;
 				tier4[i].clicks = 0;
 				sleepTimer[i] = 0;
-				image = IMG_Load("Pacman.png");
+				image = IMG_Load("Textures/NoImage.png");
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
 				tier4[i].SetTexture(texture);
@@ -601,7 +611,7 @@ void Scene1::StartJob(int tier) {
 		for (int i = 0; i < tier4Size; i++) {
 			tier4[i].asleep = false;
 			tier4[i].sleepImage = false;
-			image = IMG_Load("Pacman.png");
+			image = IMG_Load("NoImage.png");
 			texture = SDL_CreateTextureFromSurface(renderer, image);
 			tier4[i].SetImage(image);
 			tier4[i].SetTexture(texture);

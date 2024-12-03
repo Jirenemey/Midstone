@@ -29,6 +29,7 @@ private:
 	Button playButton;
 	Text titleText = Text("Atop.ttf", 100, "Job Hunt");
 	bool play = false;
+	SDL_Rect* border;
 	SDL_Surface* menuBackground;
 	SDL_Texture* menuBackgroundTexture;
 	Mix_Music* menuMusic;
@@ -36,14 +37,10 @@ private:
 
 	//***************GAME SCREEN*****************************//
 	Job job;
-	Text jobInfoText = Text("Atop.ttf", 50, "Job Info");
-	Text tierText = Text("Atop.ttf", 40, "Tier: N/A");
-	Text wageText = Text("Atop.ttf", 40, "Wage: $0");
-	Text searchInfoText = Text("Atop.ttf", 50, "Job Found");
-	Text searchTierText = Text("Atop.ttf", 40, "Tier: ");
-	Text searchWageText = Text("Atop.ttf", 40, "Wage: ");
-	Text walletText = Text("Atop.ttf", 40, "Wallet: $0");
-	Text experienceText = Text("Atop.ttf", 40, "Exp: 0");
+	Text tierText = Text("Atop.ttf", 50, "Tier: N/A");
+	Text wageText = Text("Atop.ttf", 50, "Wage: $0");
+	Text walletText = Text("Atop.ttf", 50, "Wallet: $0");
+	Text experienceText = Text("Atop.ttf", 50, "Exp: 0");
 	SDL_Surface* gameBackground;
 	SDL_Texture* gameBackgroundTexture;
 	Button applyButton;
@@ -58,10 +55,6 @@ private:
 	Button upgradeWageButton;
 	Button upgradeExpButton;
 	Button upgradeAccButton;
-	// display upgrade info
-	Text upgradePrice = Text("Atop.ttf", 40, "Price: ");
-	Text upgradeLevel = Text("Atop.ttf", 40, "Level: ");
-	Text upgradeDesc = Text("Atop.ttf", 25, "Desc: ");
 	float time = 0;
 	float bonus = 1;
 	int count = 0;
@@ -85,7 +78,6 @@ private:
 	Button tier2CounterBtn;
 	SDL_Surface* tier2Background;
 	SDL_Texture* BackgroundTexture2 = SDL_CreateTextureFromSurface(renderer, tier2Background);
-	Mix_Chunk* tier2Click;
 
 	//tier 3 variables
 	People tier3;
@@ -100,7 +92,8 @@ private:
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
 	Mix_Chunk* tier4Sleep;
-	int tier4Clicks = 7;
+	SDL_Surface* tier4Background;
+	SDL_Texture* BackgroundTexture4;
 
 public:
 	// This constructor may be different from what you've seen before
