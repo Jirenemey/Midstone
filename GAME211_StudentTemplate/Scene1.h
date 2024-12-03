@@ -89,6 +89,8 @@ private:
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
 	Mix_Chunk* tier4Sleep;
+	SDL_Surface* tier4Background;
+	SDL_Texture* BackgroundTexture4;
 
 public:
 	// This constructor may be different from what you've seen before

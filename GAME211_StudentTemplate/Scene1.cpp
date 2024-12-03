@@ -182,6 +182,12 @@ bool Scene1::OnCreate() {
 	tier3.SetTexture(texture);
 	tier3.SetPosition(Vec3(10, 10, 0));
 
+	//tier4 background
+	tier4Background = IMG_Load("Textures/Tier4Background.png");
+	BackgroundTexture4 = SDL_CreateTextureFromSurface(renderer, tier4Background);
+	//tier4 item
+	image = IMG_Load("Textures/NoImage.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 	for (int i = 0; i < tier4Size; i++) {
 		tier4[i].SetImage(image);
 		tier4[i].SetTexture(texture);
@@ -437,6 +443,8 @@ void Scene1::StartJob(int tier) {
 		}
 		if (tier2Counter == tier2CounterPlayer) {
 			//what you win
+			job.experience++;
+			bonus += 0.5;
 		}
 		break;
 	case 3:
@@ -463,11 +471,12 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 4:
+		SDL_RenderCopy(renderer, BackgroundTexture4, NULL, NULL);
 		for (int i = 0; i < tier4Size; i++) {
-			tier4[i].Draw(renderer, game->getProjectionMatrix(), 0.10f);
+			tier4[i].Draw(renderer, game->getProjectionMatrix(), 1.0f);
 			if (sleepTimer[i] > 0 && !tier4[i].sleepImage) {
 				tier4[i].sleepImage = true;
-				image = IMG_Load("Textures/Blinky.png");
+				image = IMG_Load("Textures/Tier4Asleep.png");
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
 				tier4[i].SetTexture(texture);
