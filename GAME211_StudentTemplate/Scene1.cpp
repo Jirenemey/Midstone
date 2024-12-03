@@ -506,7 +506,7 @@ void Scene1::StartJob(int tier) {
 				job.experience++;
 				tier4[i].clicks = 0;
 				sleepTimer[i] = 0;
-				image = IMG_Load("NoImage.png");
+				image = IMG_Load("Textures/NoImage.png");
 				texture = SDL_CreateTextureFromSurface(renderer, image);
 				tier4[i].SetImage(image);
 				tier4[i].SetTexture(texture);
