@@ -37,10 +37,14 @@ private:
 
 	//***************GAME SCREEN*****************************//
 	Job job;
-	Text tierText = Text("Atop.ttf", 50, "Tier: N/A");
-	Text wageText = Text("Atop.ttf", 50, "Wage: $0");
-	Text walletText = Text("Atop.ttf", 50, "Wallet: $0");
-	Text experienceText = Text("Atop.ttf", 50, "Exp: 0");
+	Text jobInfoText = Text("Atop.ttf", 50, "Job Info");
+	Text tierText = Text("Atop.ttf", 40, "Tier: N/A");
+	Text wageText = Text("Atop.ttf", 40, "Wage: $0");
+	Text searchInfoText = Text("Atop.ttf", 50, "Job Found");
+	Text searchTierText = Text("Atop.ttf", 40, "Tier: ");
+	Text searchWageText = Text("Atop.ttf", 40, "Wage: ");
+	Text walletText = Text("Atop.ttf", 40, "Wallet: $0");
+	Text experienceText = Text("Atop.ttf", 40, "Exp: 0");
 	SDL_Surface* gameBackground;
 	SDL_Texture* gameBackgroundTexture;
 	Button applyButton;
@@ -55,13 +59,17 @@ private:
 	Button upgradeWageButton;
 	Button upgradeExpButton;
 	Button upgradeAccButton;
+	// display upgrade info
+	Text upgradePrice = Text("Atop.ttf", 40, "Price: ");
+	Text upgradeLevel = Text("Atop.ttf", 40, "Level: ");
+	Text upgradeDesc = Text("Atop.ttf", 25, "Desc: ");
 	float time = 0;
 	float bonus = 1;
 	int count = 0;
 
 	//*******************JOBS********************************//
 	Mix_Chunk* point;
-	
+
 	// Tier1
 	Item tier1;
 	const char* tier1Assets[4];
@@ -78,6 +86,7 @@ private:
 	Button tier2CounterBtn;
 	SDL_Surface* tier2Background;
 	SDL_Texture* BackgroundTexture2 = SDL_CreateTextureFromSurface(renderer, tier2Background);
+	Mix_Chunk* tier2Click;
 
 	//tier 3 variables
 	People tier3;
@@ -92,6 +101,7 @@ private:
 	int tier4Size = sizeof(tier4) / sizeof(tier4[0]);
 	float sleepTimer[6];
 	Mix_Chunk* tier4Sleep;
+	int tier4Clicks = 7;
 	SDL_Surface* tier4Background;
 	SDL_Texture* BackgroundTexture4;
 
@@ -107,11 +117,11 @@ public:
 	void OnDestroy();
 	void Update(const float time);
 	void Render();
-    void HandleEvents(const SDL_Event &event);
+	void HandleEvents(const SDL_Event& event);
 	float getxAxis() { return xAxis; }
 	float getyAxis() { return yAxis; }
 	SDL_Window* getWindow() { return window; }
-    Matrix4 getProjectionMatrix() { return projectionMatrix; }
+	Matrix4 getProjectionMatrix() { return projectionMatrix; }
 	Matrix4 getInverseMatrix() { return inverseProjection; }
 };
 

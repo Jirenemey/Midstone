@@ -224,13 +224,16 @@ bool Scene1::OnCreate() {
 	tier3.SetTexture(texture);
 	tier3.SetPosition(Vec3(10, 5, 0));
 
+
+	//tier4 background
+	tier4Background = IMG_Load("Textures/Tier4Background.png");
+	BackgroundTexture4 = SDL_CreateTextureFromSurface(renderer, tier4Background);
 	//tier4 item
 	image = IMG_Load("Textures/NoImage.png");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	for (int i = 0; i < tier4Size; i++) {
 		tier4[i].SetImage(image);
 		tier4[i].SetTexture(texture);
-		tier4[i].SetPosition(Vec3(rand() % 20 + 5, rand() % 20 + 5, 0));
 	}
 	tier4[0].SetPosition(Vec3(11, 9.85, 0));
 	tier4[1].SetPosition(Vec3(5.2, 7.9, 0));
@@ -531,13 +534,12 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 3:
-		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+		tier3.Draw(renderer, game->getProjectionMatrix(), 5.0f);
 		tier3Clicks = 10 - (job.experience / 25);
 		tier3Time = 2 + (job.experience / 25);
 		if (tier3Clicks < 1)
 			tier3Clicks = 1;
 		SDL_RenderCopy(renderer, BackgroundTexture3, NULL, NULL);
-		tier3.Draw(renderer, game->getProjectionMatrix(), 5.0f);
 		if (time > tier3Time) {
 			// if robber is in store for more than 5 seconds you lose bonus
 			// and you lose 2% of your wallet (got robbed)
@@ -560,12 +562,12 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 4:
+		SDL_RenderCopy(renderer, BackgroundTexture4, NULL, NULL);
 		for (int i = 0; i < tier4Size; i++) {
-			tier4[i].Draw(renderer, game->getProjectionMatrix(), 0.10f);
+			tier4[i].Draw(renderer, game->getProjectionMatrix(), 6.0f);
 			tier4Clicks = 7 - (job.experience / 50);
 			if (tier4Clicks < 1)
 				tier4Clicks = 1;
-			tier4[i].Draw(renderer, game->getProjectionMatrix(), 4.0f);
 			if (sleepTimer[i] > 0 && !tier4[i].sleepImage) {
 				tier4[i].sleepImage = true;
 				image = IMG_Load("Textures/Tier4Asleep.png");
@@ -611,7 +613,7 @@ void Scene1::StartJob(int tier) {
 		for (int i = 0; i < tier4Size; i++) {
 			tier4[i].asleep = false;
 			tier4[i].sleepImage = false;
-			image = IMG_Load("NoImage.png");
+			image = IMG_Load("Textures/NoImage.png");
 			texture = SDL_CreateTextureFromSurface(renderer, image);
 			tier4[i].SetImage(image);
 			tier4[i].SetTexture(texture);
