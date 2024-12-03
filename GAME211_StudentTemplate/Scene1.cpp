@@ -180,7 +180,7 @@ bool Scene1::OnCreate() {
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	tier3.SetImage(image);
 	tier3.SetTexture(texture);
-	tier3.SetPosition(Vec3(10, 10, 0));
+	tier3.SetPosition(Vec3(-1, rand() % 15, 0));
 
 	//tier4 background
 	tier4Background = IMG_Load("Textures/Tier4Background.png");
@@ -448,6 +448,13 @@ void Scene1::StartJob(int tier) {
 		}
 		break;
 	case 3:
+<<<<<<< HEAD
+=======
+		tier3.Draw(renderer, game->getProjectionMatrix(), 0.10f);
+		tier3Clicks = 10 - (job.experience / 25);
+		if (tier3Clicks < 1)
+			tier3Clicks = 1;
+>>>>>>> kumanan-branch
 		SDL_RenderCopy(renderer, BackgroundTexture3, NULL, NULL);
 		tier3.Draw(renderer, game->getProjectionMatrix(), 5.0f);
 		if (time > 5) {
