@@ -84,8 +84,13 @@ void PlayerBody::Update( float deltaTime )
 {
     // Update position, call Update from base class
     // Note that would update velocity too, and rotation motion
-
+    float minX = 1.25;
+    float maxX = 24;
     Body::Update( deltaTime );
+    if (this->pos.x < minX)
+        this->setPos(Vec3(minX, this->pos.y, this->pos.z));
+    if (this->pos.x > maxX)
+        this->setPos(Vec3(maxX, this->pos.y, this->pos.z));
 
 }
 
